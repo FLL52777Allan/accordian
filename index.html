@@ -1,31 +1,124 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<style>
-body{font-family:sans-serif;background:#fff;margin:0;padding:10px}
-.ac{max-width:700px;margin:auto}
-.ac input{display:none}
-.ac label{display:block;padding:12px;background:#f8f8f8;border:1px solid #ddd;margin:4px 0;cursor:pointer;font-weight:bold}
-.ac label:hover{background:#eee}
-.ac .c{max-height:0;overflow:hidden;transition:.3s ease}
-.ac input:checked~.c{max-height:200px;padding:8px;background:#fff;border:1px solid #ddd;border-top:none}
-.ac label::after{content:"▼";float:right;transition:.3s}
-.ac input:checked+label::after{transform:rotate(180deg)}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChatGPT Tools Accordion</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 1rem;
+      background: #f7f7f7;
+    }
+
+    .accordion {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+
+    .accordion-item {
+      border-bottom: 1px solid #ddd;
+    }
+
+    .accordion-button {
+      width: 100%;
+      text-align: left;
+      background: #f0f0f0;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 15px;
+      font-size: 16px;
+      font-weight: bold;
+      transition: background 0.2s;
+    }
+
+    .accordion-button:hover {
+      background: #e0e0e0;
+    }
+
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      background: white;
+      transition: max-height 0.3s ease;
+      padding: 0 15px;
+    }
+
+    .accordion-content.open {
+      padding: 15px;
+    }
+  </style>
 </head>
 <body>
-<div class="ac">
-  <input id="t1" type="checkbox"><label for="t1">web.run – Browse/search the web</label><div class="c">Search the web, open URLs, get fresh info.</div>
-  <input id="t2" type="checkbox"><label for="t2">python – Internal code runner</label><div class="c">Used for reasoning calculations (hidden).</div>
-  <input id="t3" type="checkbox"><label for="t3">python_user_visible – Visible Python output</label><div class="c">Creates charts, tables, downloadable files.</div>
-  <input id="t4" type="checkbox"><label for="t4">canmore – Canvas editor</label><div class="c">Lets me make long docs, code files, previews.</div>
-  <input id="t5" type="checkbox"><label for="t5">image_gen – Image generator/editor</label><div class="c">Generates or edits images from prompts.</div>
-  <input id="t6" type="checkbox"><label for="t6">bio – Memory tool</label><div class="c">Stores facts or preferences you ask me to keep.</div>
-  <input id="t7" type="checkbox"><label for="t7">user_info – Location & time</label><div class="c">Lets me use your local time or location.</div>
-  <input id="t8" type="checkbox"><label for="t8">summary_reader – Internal summaries</label><div class="c">Shares safe reasoning summaries when asked.</div>
-  <input id="t9" type="checkbox"><label for="t9">container – Isolated commands</label><div class="c">Runs secure isolated commands (dev tasks).</div>
-  <input id="t10" type="checkbox"><label for="t10">misc / helpers – Utilities</label><div class="c">Smaller helper tools used behind the scenes.</div>
-</div>
+  <h1>ChatGPT Tools</h1>
+  <div class="accordion">
+    <div class="accordion-item">
+      <button class="accordion-button">1. bio</button>
+      <div class="accordion-content">Store information across conversations.</div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-button">2. canmore</button>
+      <div class="accordion-content">Create, update, and comment on text documents.</div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-button">3. image_gen</button>
+      <div class="accordion-content">Generate and edit images from descriptions.</div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-button">4. python</button>
+      <div class="accordion-content">Run Python code in a Jupyter notebook environment.</div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-button">5. web</button>
+      <div class="accordion-content">Search the web or open URLs for fresh information.</div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-button">6. search</button>
+      <div class="accordion-content">Query search engines for real-time data.</div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-button">7. open_url</button>
+      <div class="accordion-content">Open and display specific URLs for more detail.</div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-button">8. reportlab</button>
+      <div class="accordion-content">Generate PDFs with styled text and graphics.</div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-button">9. pypandoc</button>
+      <div class="accordion-content">Convert between text formats like .md, .rtf, .txt.</div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-button">10. openpyxl</button>
+      <div class="accordion-content">Create and modify Excel spreadsheets (.xlsx).</div>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll(".accordion-button").forEach(button => {
+      button.addEventListener("click", () => {
+        const content = button.nextElementSibling;
+        const isOpen = content.classList.contains("open");
+
+        document.querySelectorAll(".accordion-content").forEach(c => {
+          c.style.maxHeight = null;
+          c.classList.remove("open");
+        });
+
+        if (!isOpen) {
+          content.classList.add("open");
+          content.style.maxHeight = content.scrollHeight + "px";
+        }
+      });
+    });
+  </script>
 </body>
 </html>
+
+
