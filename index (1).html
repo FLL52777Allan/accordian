@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Slightly Darker Blue Gradient Dropdown</title>
+    <title>Multiple Open Accordion</title>
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-4oVn3H+zYFE+F/hDDmDr02HgpZ2+nLMsO4DqS93HlyPq2A9VzqPSV0fEYO4NeOeTElFS6oAeMo9+Y+gLqPQfw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
@@ -270,13 +270,11 @@
                 const content = header.nextElementSibling;
                 const isActive = header.classList.contains('active');
 
-                document.querySelectorAll('.accordion-header').forEach(h => h.classList.remove('active'));
-                document.querySelectorAll('.accordion-content').forEach(c => {
-                    c.classList.remove('open');
-                    c.style.maxHeight = null;
-                });
-
-                if (!isActive) {
+                if (isActive) {
+                    header.classList.remove('active');
+                    content.classList.remove('open');
+                    content.style.maxHeight = null;
+                } else {
                     header.classList.add('active');
                     content.classList.add('open');
                     content.style.maxHeight = content.scrollHeight + 'px';
