@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enhanced Tool Accordion List</title>
+    <title>Unified Header Color Tool Accordion</title>
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-4oVn3H+zYFE+F/hDDmDr02HgpZ2+nLMsO4DqS93HlyPq2A9VzqPSV0fEYO4NeOeTElFS6oAeMo9+Y+gLqPQfw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
@@ -44,6 +44,7 @@
             transition: background 0.3s ease;
             border-radius: 8px 8px 0 0; /* Rounded top corners */
             margin: 5px; /* Space between items */
+            background: linear-gradient(135deg, #007BFF, #0056b3); /* Unified header color */
         }
 
         .accordion-title {
@@ -101,93 +102,53 @@
             background: #1e7e34;
         }
 
-        /* Tool-specific styles */
+        /* Content-specific styles (retained) */
         /* ChatGPT */
-        .chatgpt-header {
-            background: linear-gradient(135deg, #10a37f, #005f49);
-        }
-
         .chatgpt-content {
             background: linear-gradient(to bottom, #f0f9f6, #e0f2ef);
         }
 
         /* Canva */
-        .canva-header {
-            background: linear-gradient(135deg, #00c6ff, #0072ff);
-        }
-
         .canva-content {
             background: linear-gradient(to bottom, #e6faff, #ccebff);
         }
 
         /* Notion */
-        .notion-header {
-            background: linear-gradient(135deg, #7c3aed, #4c1d95);
-        }
-
         .notion-content {
             background: linear-gradient(to bottom, #f5f3ff, #ede9fe);
         }
 
         /* Trello */
-        .trello-header {
-            background: linear-gradient(135deg, #0079bf, #005a87);
-        }
-
         .trello-content {
             background: linear-gradient(to bottom, #e6f2ff, #cce0ff);
         }
 
         /* Figma */
-        .figma-header {
-            background: linear-gradient(135deg, #f24e1e, #a62700);
-        }
-
         .figma-content {
             background: linear-gradient(to bottom, #fff0ec, #ffe0d9);
         }
 
         /* Grammarly */
-        .grammarly-header {
-            background: linear-gradient(135deg, #04d47d, #009155);
-        }
-
         .grammarly-content {
             background: linear-gradient(to bottom, #e6ffe9, #ccffda);
         }
 
         /* Google Analytics */
-        .google-analytics-header {
-            background: linear-gradient(135deg, #ff7900, #db6200);
-        }
-
         .google-analytics-content {
             background: linear-gradient(to bottom, #fff2e6, #ffe0cc);
         }
 
         /* Zapier */
-        .zapier-header {
-            background: linear-gradient(135deg, #ff4a00, #d63900);
-        }
-
         .zapier-content {
             background: linear-gradient(to bottom, #fff0e6, #ffe0cc);
         }
 
         /* GitHub */
-        .github-header {
-            background: linear-gradient(135deg, #333333, #1a1a1a);
-        }
-
         .github-content {
             background: linear-gradient(to bottom, #f2f2f2, #e6e6e6);
         }
 
         /* Slack */
-        .slack-header {
-            background: linear-gradient(135deg, #e01e5a, #a6153d);
-        }
-
         .slack-content {
             background: linear-gradient(to bottom, #ffe6ee, #ffcce5);
         }
@@ -199,7 +160,7 @@
 
     <div class="accordion">
         <div class="accordion-item">
-            <div class="accordion-header chatgpt-header">
+            <div class="accordion-header">
                 <span class="accordion-title"><i class="fas fa-comment-dots"></i> 1. ChatGPT</span>
                 <span class="arrow">▶</span>
             </div>
@@ -209,7 +170,7 @@
             </div>
         </div>
         <div class="accordion-item">
-            <div class="accordion-header canva-header">
+            <div class="accordion-header">
                 <span class="accordion-title"><i class="fas fa-palette"></i> 2. Canva</span>
                 <span class="arrow">▶</span>
             </div>
@@ -219,7 +180,7 @@
             </div>
         </div>
         <div class="accordion-item">
-            <div class="accordion-header notion-header">
+            <div class="accordion-header">
                 <span class="accordion-title"><i class="fas fa-lightbulb"></i> 3. Notion</span>
                 <span class="arrow">▶</span>
             </div>
@@ -229,7 +190,7 @@
             </div>
         </div>
         <div class="accordion-item">
-            <div class="accordion-header trello-header">
+            <div class="accordion-header">
                 <span class="accordion-title"><i class="fas fa-tasks"></i> 4. Trello</span>
                 <span class="arrow">▶</span>
             </div>
@@ -239,7 +200,7 @@
             </div>
         </div>
         <div class="accordion-item">
-            <div class="accordion-header figma-header">
+            <div class="accordion-header">
                 <span class="accordion-title"><i class="fas fa-vector-square"></i> 5. Figma</span>
                 <span class="arrow">▶</span>
             </div>
@@ -249,7 +210,7 @@
             </div>
         </div>
         <div class="accordion-item">
-            <div class="accordion-header grammarly-header">
+            <div class="accordion-header">
                 <span class="accordion-title"><i class="fas fa-check-double"></i> 6. Grammarly</span>
                 <span class="arrow">▶</span>
             </div>
@@ -259,7 +220,7 @@
             </div>
         </div>
         <div class="accordion-item">
-            <div class="accordion-header google-analytics-header">
+            <div class="accordion-header">
                 <span class="accordion-title"><i class="fas fa-chart-bar"></i> 7. Google Analytics</span>
                 <span class="arrow">▶</span>
             </div>
@@ -269,7 +230,7 @@
             </div>
         </div>
         <div class="accordion-item">
-            <div class="accordion-header zapier-header">
+            <div class="accordion-header">
                 <span class="accordion-title"><i class="fas fa-plug"></i> 8. Zapier</span>
                 <span class="arrow">▶</span>
             </div>
@@ -279,7 +240,7 @@
             </div>
         </div>
         <div class="accordion-item">
-            <div class="accordion-header github-header">
+            <div class="accordion-header">
                 <span class="accordion-title"><i class="fab fa-github-alt"></i> 9. GitHub</span>
                 <span class="arrow">▶</span>
             </div>
@@ -289,7 +250,7 @@
             </div>
         </div>
         <div class="accordion-item">
-            <div class="accordion-header slack-header">
+            <div class="accordion-header">
                 <span class="accordion-title"><i class="fab fa-slack-hash"></i> 10. Slack</span>
                 <span class="arrow">▶</span>
             </div>
