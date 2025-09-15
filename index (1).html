@@ -18,34 +18,28 @@
             justify-content: center;
             z-index: 9999;
         }
-
         #preloader video {
             max-width: 80%;
             max-height: 80%;
         }
-
         .accordion {
             opacity: 0;
             transition: opacity 0.8s ease;
         }
-
         .accordion.show {
             opacity: 1;
         }
-
         body {
             font-family: 'Segoe UI', Tahoma, sans-serif;
             background: linear-gradient(to bottom right, #e9f0f8, #f9fcff);
             margin: 0;
             padding: 20px;
         }
-
         h1 {
             text-align: center;
             margin-bottom: 25px;
             color: #333;
         }
-
         .accordion {
             max-width: 700px;
             margin: auto;
@@ -54,11 +48,9 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             overflow: hidden;
         }
-
         .accordion-item {
             border-bottom: 1px solid #eee;
         }
-
         .accordion-header {
             padding: 8px 20px;
             cursor: pointer;
@@ -73,26 +65,21 @@
             background: linear-gradient(135deg, #667eea, #764ba2);
             height: 40px;
         }
-
         .accordion-title {
             display: flex;
             align-items: center;
             gap: 10px;
         }
-
         .accordion-title i {
             font-size: 20px;
             margin-right: 5px;
         }
-
         .arrow {
             transition: transform 0.3s ease;
         }
-
         .accordion-header.active .arrow {
             transform: rotate(90deg);
         }
-
         .accordion-content {
             overflow: hidden;
             max-height: 0;
@@ -102,17 +89,14 @@
             margin: 0 2px 2px 2px;
             background: linear-gradient(to bottom, #d0efff, #b3e0ff);
         }
-
         .accordion-content.open {
             padding: 15px 20px;
         }
-
         .accordion-content p {
             margin-bottom: 12px;
             line-height: 1.5;
             color: #555;
         }
-
         .launch-btn {
             background: #28a745;
             color: white;
@@ -126,20 +110,18 @@
             display: inline-block;
             margin-top: 10px;
         }
-
         .launch-btn:hover {
             background: #1e7e34;
         }
-
         .logo {
             width: 30px;
             height: auto;
             margin-right: 10px;
             vertical-align: middle;
+            border-radius: 5px; /* Added border-radius */
         }
     </style>
 </head>
-
 <body>
     <!-- Preloader -->
     <div id="preloader">
@@ -147,14 +129,12 @@
             <source src="https://storage.googleapis.com/lt-infinity-prd/artifacts/model-serving/56fa3994ce16d7da1e07dcd2377c7a431a9a2840af2076ef3449c4668f51b875?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=infinity-prd%40ltx-vl-web-prd.iam.gserviceaccount.com%2F20250915%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20250915T154229Z&X-Goog-Expires=86400&X-Goog-SignedHeaders=host&X-Goog-Signature=4ee3b9843b9b8141f03f297a49ffd7c2e7cdf95e76bbf56d387626bf31f7d4f57ed19493b0f2aa49208dd362d99f15d20de63cba8a5beeb8f9c2b86281955e0869f027678df95ab330f9b3e13e4ffd59dcb85752feee418a0c71856dbcec98d225d47de9a9a92468b7b05cadf533c41605c5722675d4f057e6ef6abcf9032da6e31877db62777464b1b3d5ae310d3ba90e42dd7453a3bde20eeaca6ac11549c790457d455d9735e9f7e9bef51b68cf19535d0d4a9f4c64fb7098624b624dab6a0d4b0d1d343d0079cf331e2e05c2eba16f6f204c91a8c54939193c65e297f4d8e37e38f8f3ebe1f76fde2c12e0a883c5d03ac026cb687c70bbec5f92e656e664" type="video/mp4">
         </video>
     </div>
-
     <h1>My Top 10 Tools</h1>
-
     <div class="accordion">
         <div class="accordion-item">
             <div class="accordion-header">
                 <span class="accordion-title">
-                    <img src="https://maxai.me/wp-content/uploads/2024/02/cropped-maxai_logo_fav-192x192.png" alt="MaxAI Logo" class="logo">
+                    <img src="https://i.ibb.co/3z09VQN/maxai.png" alt="MaxAI Logo" class="logo">
                     1. MaxAI
                 </span>
                 <span class="arrow">▶</span>
@@ -162,7 +142,7 @@
             <div class="accordion-content chatgpt-content">
                 <p>HTML + CSS AI code builder</p>
                 <a href="https://maxai.me/" target="_blank" class="launch-btn">
-                    <img src="https://maxai.me/wp-content/uploads/2024/02/cropped-maxai_logo_fav-192x192.png" alt="MaxAI Logo" class="logo">
+                    <img src="https://i.ibb.co/3z09VQN/maxai.png" alt="MaxAI Logo" class="logo">
                     Launch Site
                 </a>
             </div>
@@ -170,7 +150,7 @@
         <div class="accordion-item">
             <div class="accordion-header">
                 <span class="accordion-title">
-                    <img src="https://i.ibb.co/Nn6X0jV/LTX-Studio-Logo.png" alt="LTX Studio Logo" class="logo">
+                    <img src="https://i.ibb.co/7y0S65V/ltxstudio.png" alt="LTX Studio Logo" class="logo">
                     2. LTX studio
                 </span>
                 <span class="arrow">▶</span>
@@ -178,7 +158,7 @@
             <div class="accordion-content canva-content">
                 <p>Great for image animation</p>
                 <a href="https://ltx.studio/" target="_blank" class="launch-btn">
-                     <img src="https://i.ibb.co/Nn6X0jV/LTX-Studio-Logo.png" alt="LTX Studio Logo" class="logo">
+                     <img src="https://i.ibb.co/7y0S65V/ltxstudio.png" alt="LTX Studio Logo" class="logo">
                     Launch Site
                 </a>
             </div>
@@ -186,7 +166,7 @@
         <div class="accordion-item">
             <div class="accordion-header">
                 <span class="accordion-title">
-                    <img src="https://i.ibb.co/0ybM54b/dall-e-logo.png" alt="DALL-E 3 Logo" class="logo">
+                    <img src="https://i.ibb.co/xS5vWJp/dalle3.png" alt="DALL-E 3 Logo" class="logo">
                     3. DALL-E 3
                 </span>
                 <span class="arrow">▶</span>
@@ -194,7 +174,7 @@
             <div class="accordion-content notion-content">
                 <p>Great for image generation</p>
                 <a href="https://openai.com/dall-e-3" target="_blank" class="launch-btn">
-                    <img src="https://i.ibb.co/0ybM54b/dall-e-logo.png" alt="DALL-E 3 Logo" class="logo">
+                    <img src="https://i.ibb.co/xS5vWJp/dalle3.png" alt="DALL-E 3 Logo" class="logo">
                     Launch Site
                 </a>
             </div>
@@ -202,7 +182,7 @@
         <div class="accordion-item">
             <div class="accordion-header">
                 <span class="accordion-title">
-                  <img src="https://i.ibb.co/3RhjF6n/Vidu-AI-Logo.png" alt="Vidu AI Logo" class="logo">
+                  <img src="https://i.ibb.co/6b1s64z/viduai.png" alt="Vidu AI Logo" class="logo">
                   4. Vidu AI
                 </span>
                 <span class="arrow">▶</span>
@@ -210,7 +190,7 @@
             <div class="accordion-content trello-content">
                 <p>I used this AI to get my animation prompt.</p>
                 <a href="https://www.vidu.com/" target="_blank" class="launch-btn">
-                    <img src="https://i.ibb.co/3RhjF6n/Vidu-AI-Logo.png" alt="Vidu AI Logo" class="logo">
+                    <img src="https://i.ibb.co/6b1s64z/viduai.png" alt="Vidu AI Logo" class="logo">
                     Launch Site
                 </a>
             </div>
@@ -218,7 +198,7 @@
         <div class="accordion-item">
             <div class="accordion-header">
                 <span class="accordion-title">
-                   <img src="https://i.ibb.co/zQ9v4d4/Adobe-Firefly-Logo.png" alt="Adobe Firefly Logo" class="logo">
+                   <img src="https://i.ibb.co/Y4f6L2V/adobefirefly.png" alt="Adobe Firefly Logo" class="logo">
                    5. Adobe Firefly
                 </span>
                 <span class="arrow">▶</span>
@@ -226,7 +206,7 @@
             <div class="accordion-content figma-content">
                 <p>I started with this image generation AI and it gave me the actual Logo idea of my logo.</p>
                 <a href="https://firefly.adobe.com" target="_blank" class="launch-btn">
-                     <img src="https://i.ibb.co/zQ9v4d4/Adobe-Firefly-Logo.png" alt="Adobe Firefly Logo" class="logo">
+                     <img src="https://i.ibb.co/Y4f6L2V/adobefirefly.png" alt="Adobe Firefly Logo" class="logo">
                     Launch Site
                 </a>
             </div>
@@ -234,7 +214,7 @@
         <div class="accordion-item">
             <div class="accordion-header">
                 <span class="accordion-title">
-                    <img src="https://i.ibb.co/c8R7fVz/Veed-io-Logo.png" alt="Veed.io Logo" class="logo">
+                    <img src="https://i.ibb.co/HpqB7hF/veedio.png" alt="Veed.io Logo" class="logo">
                     6. Veed.io
                 </span>
                 <span class="arrow">▶</span>
@@ -242,7 +222,7 @@
             <div class="accordion-content grammarly-content">
                 <p>I used this AI to try to animate the image myself and get a better picture of my animation.</p>
                 <a href="https://www.veed.io" target="_blank" class="launch-btn">
-                    <img src="https://i.ibb.co/c8R7fVz/Veed-io-Logo.png" alt="Veed.io Logo" class="logo">
+                    <img src="https://i.ibb.co/HpqB7hF/veedio.png" alt="Veed.io Logo" class="logo">
                     Launch Site
                 </a>
             </div>
@@ -250,7 +230,7 @@
         <div class="accordion-item">
             <div class="accordion-header">
                 <span class="accordion-title">
-                    <img src="https://i.ibb.co/2y0C9Vp/Monica-AI-Logo.png" alt="Monica AI Logo" class="logo">
+                    <img src="https://i.ibb.co/wWqW83k/monicai.png" alt="Monica AI Logo" class="logo">
                     7. Monica AI
                 </span>
                 <span class="arrow">▶</span>
@@ -258,7 +238,7 @@
             <div class="accordion-content google-analytics-content">
                 <p>I used this AI to get an even further picture of my animation.</p>
                 <a href="https://monica.im" target="_blank" class="launch-btn">
-                     <img src="https://i.ibb.co/2y0C9Vp/Monica-AI-Logo.png" alt="Monica AI Logo" class="logo">
+                     <img src="https://i.ibb.co/wWqW83k/monicai.png" alt="Monica AI Logo" class="logo">
                     Launch Site
                 </a>
             </div>
@@ -266,7 +246,7 @@
         <div class="accordion-item">
             <div class="accordion-header">
                 <span class="accordion-title">
-                   <img src="https://i.ibb.co/qYRzQ0P/Zapier-Logo.png" alt="Zapier Logo" class="logo">
+                   <img src="https://i.ibb.co/D8463zR/zapier.png" alt="Zapier Logo" class="logo">
                    8. Zapier
                 </span>
                 <span class="arrow">▶</span>
@@ -274,7 +254,7 @@
             <div class="accordion-content zapier-content">
                 <p>Automation tool for connecting multiple apps.</p>
                 <a href="https://zapier.com" target="_blank" class="launch-btn">
-                    <img src="https://i.ibb.co/qYRzQ0P/Zapier-Logo.png" alt="Zapier Logo" class="logo">
+                    <img src="https://i.ibb.co/D8463zR/zapier.png" alt="Zapier Logo" class="logo">
                     Launch Site
                 </a>
             </div>
@@ -282,7 +262,7 @@
         <div class="accordion-item">
             <div class="accordion-header">
                 <span class="accordion-title">
-                   <img src="https://i.ibb.co/kG8z9K0/Github-Logo.png" alt="GitHub Logo" class="logo">
+                   <img src="https://i.ibb.co/nQGg2z4/github.png" alt="GitHub Logo" class="logo">
                    9. GitHub
                 </span>
                 <span class="arrow">▶</span>
@@ -290,7 +270,7 @@
             <div class="accordion-content github-content">
                 <p>Code hosting platform for developers with version control.</p>
                 <a href="https://github.com" target="_blank" class="launch-btn">
-                     <img src="https://i.ibb.co/kG8z9K0/Github-Logo.png" alt="GitHub Logo" class="logo">
+                     <img src="https://i.ibb.co/nQGg2z4/github.png" alt="GitHub Logo" class="logo">
                     Launch Site
                 </a>
             </div>
@@ -298,7 +278,7 @@
         <div class="accordion-item">
             <div class="accordion-header">
                 <span class="accordion-title">
-                    <img src="https://i.ibb.co/tX261zT/Slack-Logo.png" alt="Slack Logo" class="logo">
+                    <img src="https://i.ibb.co/pZjWw2f/slack.png" alt="Slack Logo" class="logo">
                    10. Slack
                 </span>
                 <span class="arrow">▶</span>
@@ -306,13 +286,12 @@
             <div class="accordion-content slack-content">
                 <p>Team collaboration and messaging platform.</p>
                 <a href="https://slack.com" target="_blank" class="launch-btn">
-                    <img src="https://i.ibb.co/tX261zT/Slack-Logo.png" alt="Slack Logo" class="logo">
+                    <img src="https://i.ibb.co/pZjWw2f/slack.png" alt="Slack Logo" class="logo">
                     Launch Site
                 </a>
             </div>
         </div>
     </div>
-
     <script>
         // Preloader functionality
         window.addEventListener('load', function() {
@@ -322,15 +301,12 @@
                 document.querySelector('.accordion').classList.add('show');
             };
         });
-
         // Accordion toggle
         const headers = document.querySelectorAll('.accordion-header');
-
         headers.forEach(header => {
             header.addEventListener('click', () => {
                 const content = header.nextElementSibling;
                 const isActive = header.classList.contains('active');
-
                 if (isActive) {
                     header.classList.remove('active');
                     content.classList.remove('open');
@@ -343,7 +319,7 @@
             });
         });
     </script>
-
+    
 </body>
-
+    
 </html>
