@@ -1,44 +1,4 @@
-<style>
-/* Preloader */
-#preloader {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-}
-#preloader video {
-    max-width: 80%;
-    max-height: 80%;
-}
-
-/* Hide accordion initially & fade in */
-.accordion {
-    opacity: 0;
-    transition: opacity 0.8s ease;
-}
-.accordion.show {
-    opacity: 1;
-}
-</style>
-
-<body>
-<!-- Preloader with your animation -->
-<div id="preloader">
-    <video autoplay muted playsinline>
-        <source src="https://storage.googleapis.com/lt-infinity-prd/artifacts/model-serving/56fa3994ce16d7da1e07dcd2377c7a431a9a2840af2076ef3449c4668f51b875?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=infinity-prd%40ltx-vl-web-prd.iam.gserviceaccount.com%2F20250915%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20250915T154229Z&X-Goog-Expires=86400&X-Goog-SignedHeaders=host&X-Goog-Signature=4ee3b9843b9b8141f03f297a49ffd7c2e7cdf95e76bbf56d387626bf31f7d4f57ed19493b0f2aa49208dd362d99f15d20de63cba8a5beeb8f9c2b86281955e0869f027678df95ab330f9b3e13e4ffd59dcb85752feee418a0c71856dbcec98d225d47de9a9a92468b7b05cadf533c41605c5722675d4f057e6ef6abcf9032da6e31877db62777464b1b3d5ae310d3ba90e42dd7453a3bde20eeaca6ac11549c790457d455d9735e9f7e9bef51b68cf19535d0d4a9f4c64fb7098624b624dab6a0d4b0d1d343d0079cf331e2e05c2eba16f6f204c91a8c54939193c65e297f4d8e37e38f8f3ebe1f76fde2c12e0a883c5d03ac026cb687c70bbec5f92e656e664" type="video/mp4">
-    </video>
-</div>
-
-<h1>My Top 10 Tools</h1>
-
-<div class="accordion">
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -47,6 +7,35 @@
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-4oVn3H+zYFE+F/hDDmDr02HgpZ2+nLMsO4DqS93HlyPq2A9VzqPSV0fEYO4NeOeTElFS6oAeMo9+Y+gLqPQfw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
+        /* Preloader styles */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        #preloader video {
+            max-width: 80%;
+            max-height: 80%;
+        }
+
+        /* Hide accordion until preloader ends */
+        .accordion {
+            opacity: 0;
+            transition: opacity 0.8s ease;
+        }
+
+        .accordion.show {
+            opacity: 1;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, sans-serif;
             background: linear-gradient(to bottom right, #e9f0f8, #f9fcff);
@@ -82,9 +71,9 @@
             justify-content: space-between;
             align-items: center;
             transition: background 0.3s ease;
-            border-radius: 15px; /* Reduced roundness */
-            margin: 2px; /* Reduced margin for less space between headers */
-            background: linear-gradient(135deg, #667eea, #764ba2); /* New header color gradient */
+            border-radius: 15px;
+            margin: 2px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
         }
 
         .accordion-title {
@@ -94,8 +83,8 @@
         }
 
         .accordion-title i {
-            font-size: 20px; /* Increased size for better visibility */
-            margin-right: 5px; /* Spacing between icon and text */
+            font-size: 20px;
+            margin-right: 5px;
         }
 
         .arrow {
@@ -111,9 +100,9 @@
             max-height: 0;
             transition: max-height 0.4s ease, padding 0.3s ease;
             padding: 0 20px;
-            border-radius: 15px; /* Adjusted to match the header */
-            margin: 0 2px 2px 2px; /* Adjusted margin to match the header */
-            background: linear-gradient(to bottom, #d0efff, #b3e0ff); /* Slightly darker blue gradient */
+            border-radius: 15px;
+            margin: 0 2px 2px 2px;
+            background: linear-gradient(to bottom, #d0efff, #b3e0ff);
         }
 
         .accordion-content.open {
@@ -162,7 +151,6 @@
         /* Trello */
         .trello-content {
             background: linear-gradient(to bottom, #d0efff, #b3e0ff); /* Slightly darker blue gradient */
-
         }
 
         /* Figma */
@@ -196,7 +184,14 @@
         }
     </style>
 </head>
+
 <body>
+    <!-- Preloader -->
+    <div id="preloader">
+        <video autoplay muted playsinline>
+            <source src="https://storage.googleapis.com/lt-infinity-prd/artifacts/model-serving/56fa3994ce16d7da1e07dcd2377c7a431a9a2840af2076ef3449c4668f51b875?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=infinity-prd%40ltx-vl-web-prd.iam.gserviceaccount.com%2F20250915%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20250915T154229Z&X-Goog-Expires=86400&X-Goog-SignedHeaders=host&X-Goog-Signature=4ee3b9843b9b8141f03f297a49ffd7c2e7cdf95e76bbf56d387626bf31f7d4f57ed19493b0f2aa49208dd362d99f15d20de63cba8a5beeb8f9c2b86281955e0869f027678df95ab330f9b3e13e4ffd59dcb85752feee418a0c71856dbcec98d225d47de9a9a92468b7b05cadf533c41605c5722675d4f057e6ef6abcf9032da6e31877db62777464b1b3d5ae310d3ba90e42dd7453a3bde20eeaca6ac11549c790457d455d9735e9f7e9bef51b68cf19535d0d4a9f4c64fb7098624b624dab6a0d4b0d1d343d0079cf331e2e05c2eba16f6f204c91a8c54939193c65e297f4d8e37e38f8f3ebe1f76fde2c12e0a883c5d03ac026cb687c70bbec5f92e656e664" type="video/mp4">
+        </video>
+    </div>
 
     <h1>My Top 10 Tools</h1>
 
@@ -257,7 +252,6 @@
                 <span class="arrow">▶</span>
             </div>
             <div class="accordion-content grammarly-content">
-
                 <p>I used this AI to try to animate the image myself and get a better picture of my animation.</p>
                 <a href="https://www.veed.io" target="_blank" class="launch-btn">Launch Site</a>
             </div>
@@ -305,6 +299,16 @@
     </div>
 
     <script>
+        // Preloader functionality
+        window.addEventListener('load', function() {
+            const video = document.querySelector('#preloader video');
+            video.onended = () => {
+                document.getElementById('preloader').style.display = 'none';
+                document.querySelector('.accordion').classList.add('show');
+            };
+        });
+
+        // Accordion toggle
         const headers = document.querySelectorAll('.accordion-header');
 
         headers.forEach(header => {
@@ -326,16 +330,5 @@
     </script>
 
 </body>
-</html>
-</div>
 
-<script>
-window.addEventListener('load', function() {
-    const video = document.querySelector('#preloader video');
-    video.onended = () => {
-        document.getElementById('preloader').style.display = 'none';
-        document.querySelector('.accordion').classList.add('show');
-    };
-});
-</script>
-</body>
+</html>
