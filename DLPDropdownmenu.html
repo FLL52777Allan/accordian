@@ -3,82 +3,172 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Accordion — HTML + CSS (Smooth open & close)</title>
+  <title>Accordion — HTML + CSS (Theme + Polish)</title>
   <style>
-    :root{
-      --bg:#0b0b10; --panel:#12121a; --text:#e8e8f0; --muted:#a5a7b4; --accent:#6aa6ff; --ring:#8ec1ff; --radius:16px;
-      --dur:560ms; --ease:cubic-bezier(.22,1.2,.32,1);
+    /* Base reset */
+    html, body { height: 100%; margin: 0 }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Helvetica, Arial, "Noto Sans" }
+
+    /* Theming lives on .app so we can flip vars when #theme-toggle is checked */
+    .app{
+      --bg:#0b0b10;
+      --bg-accent:#1b1b28;
+      --panel:#12121a;
+      --text:#e8e8f0;
+      --muted:#a5a7b4;
+      --accent:#6aa6ff;
+      --ring:#8ec1ff;
+      --radius:16px;
+      --img-frame:#0e0e16;
+      --shadow:0 0 0 1px rgba(255,255,255,0.02) inset, 0 8px 30px rgba(0,0,0,.25);
+      --dur:560ms;
+      --ease:cubic-bezier(.22,1.2,.32,1);
+
+      min-height:100%;
+      color:var(--text);
+      background: radial-gradient(1200px 600px at 20% -10%, var(--bg-accent) 0%, var(--bg) 60%);
+      transition: background-color 300ms ease, color 300ms ease, outline-color 300ms ease, box-shadow 300ms ease;
     }
-    html,body{height:100%;margin:0;background:radial-gradient(1200px 600px at 20% -10%, #1b1b28 0%, #0b0b10 60%);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial,"Noto Sans"}
+
+    /* Light theme when toggled */
+    #theme-toggle:checked ~ .app{
+      --bg:#f6f7fb;
+      --bg-accent:#ffffff;
+      --panel:#ffffff;
+      --text:#0e1320;
+      --muted:#50586b;
+      --accent:#2f6bff;
+      --ring:#89b4ff;
+      --img-frame:#eef1f8;
+      --shadow:0 0 0 1px rgba(3,8,20,0.05) inset, 0 8px 30px rgba(3,8,20,.08);
+      background: radial-gradient(1200px 600px at 20% -10%, var(--bg-accent) 0%, var(--bg) 60%);
+    }
+
     .wrap{max-width:720px;margin:clamp(24px,6vw,64px) auto;padding:0 16px}
     h1{margin:0 0 12px}
     p.lead{color:var(--muted);margin:0 0 24px}
 
-    .accordion{display:grid;gap:12px}
-    .item{position:relative;border:1px solid #232336;background:linear-gradient(180deg,#13131d 0%,#10101a 100%);border-radius:var(--radius);box-shadow:0 0 0 1px rgba(255,255,255,.02) inset,0 8px 30px rgba(0,0,0,.25)}
+    /* Theme toggle (CSS-only) */
+    .theme-switch{position:sticky;top:12px;display:flex;justify-content:flex-end;max-width:720px;margin:12px auto 0;padding:0 16px;z-index:2}
+    #theme-toggle{position:absolute;opacity:0;pointer-events:none}
+    .theme-btn{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:10px 14px;border-radius:999px;background:var(--panel);color:var(--text);
+      border:1px solid rgba(128,128,160,.25);box-shadow:var(--shadow);cursor:pointer;user-select:none;
+      transition:transform 160ms ease, background-color 300ms ease, color 300ms ease
+    }
+    .theme-btn:hover{transform:translateY(-1px)}
+    .theme-emoji{font-size:16px;opacity:.9}
 
+    /* Accordion core */
+    .accordion{display:grid;gap:12px}
+    .item{
+      position:relative;
+      border:1px solid rgba(128,128,160,.25);
+      background:linear-gradient(180deg, color-mix(in oklab, var(--panel), #000 0%) 0%, color-mix(in oklab, var(--panel), #000 6%) 100%);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      transition:box-shadow 240ms ease, border-color 240ms ease, background-color 240ms ease
+    }
+    /* Hover glow */
+    .item:hover{
+      box-shadow:
+        0 0 0 1px rgba(0,0,0,0) inset,
+        0 14px 44px rgba(0,0,0,.35),
+        0 0 0 3px color-mix(in oklab, var(--accent), transparent 70%);
+    }
+
+    /* Checkboxes control each item */
     .item > input{position:absolute;inset:0;opacity:0;pointer-events:none}
-    .summary{cursor:pointer;display:grid;grid-template-columns:1fr auto;align-items:center;gap:12px;padding:16px 18px;font-weight:600;user-select:none}
+
+    .summary{
+      cursor:pointer;display:grid;grid-template-columns:1fr auto;align-items:center;gap:12px;
+      padding:16px 18px;font-weight:600;user-select:none
+    }
     .summary:focus-visible{outline:none;box-shadow:0 0 0 3px var(--ring);border-radius:calc(var(--radius) - 2px)}
+
     .chev{font-size:14px;color:var(--muted);transition:transform calc(var(--dur)*.85) var(--ease), color 220ms ease}
     .chev::before{content:"▶"}
 
     .panel{display:grid;grid-template-rows:0fr;transition:grid-template-rows var(--dur) var(--ease)}
     .panel > .panel-inner{overflow:hidden}
 
-    .panel-inner > *{opacity:0;transform:translateY(-6px) scale(.98);transition:opacity calc(var(--dur)*.8) var(--ease), transform calc(var(--dur)*.8) var(--ease);color:var(--muted);line-height:1.6;padding:0 18px}
+    /* Content fade/slide both ways */
+    .panel-inner > *{
+      opacity:0;transform:translateY(-6px) scale(.98);
+      transition:opacity calc(var(--dur)*.8) var(--ease), transform calc(var(--dur)*.8) var(--ease);
+      color:var(--muted);line-height:1.6;padding:0 18px
+    }
 
+    /* Open state */
     .item > input:checked ~ .panel{grid-template-rows:1fr}
     .item > input:checked ~ .summary .chev{transform:rotate(90deg);color:var(--accent)}
     .item > input:checked ~ .panel .panel-inner > *{opacity:1;transform:none;transition-delay:80ms}
 
-    img.accordion-img{display:block;width:100%;height:auto;border-radius:12px;margin:12px auto}
+    /* Framed images */
+    img.accordion-img{
+      display:block;width:100%;height:auto;border-radius:14px;margin:12px auto;
+      background:var(--img-frame);
+      border:1px solid rgba(128,128,160,.25);
+      box-shadow:0 10px 28px rgba(3,8,20,.35)
+    }
 
     @media (prefers-reduced-motion: reduce){
-      .panel,.panel-inner > *, .summary .chev{transition:none}
+      .panel,.panel-inner > *, .summary .chev, .theme-btn{transition:none !important}
     }
   </style>
 </head>
 <body>
-  <main class="wrap">
-    <h1>Accordion (HTML + CSS)</h1>
-    <p class="lead">Smooth open <em>and</em> close, springy easing, no JavaScript required.</p>
+  <!-- Theme toggle (place BEFORE .app so :checked ~ .app works) -->
+  <div class="theme-switch">
+    <input type="checkbox" id="theme-toggle" />
+    <label class="theme-btn" for="theme-toggle"><span class="theme-emoji">🌙</span> <span>Light / Dark</span></label>
+  </div>
 
-    <section class="accordion">
-      <div class="item">
-        <input type="checkbox" id="acc-1" />
-        <label class="summary" for="acc-1">Poem: The Helpfulness of Learning How to Deal with Stress<span class="chev" aria-hidden="true"></span></label>
-        <div class="panel"><div class="panel-inner">
-          <img src="images/SelfDirectedLearningPoemActivity.png" alt="Poem about dealing with stress" class="accordion-img" />
-          <p>This section features the poem titled <em>The helpfulness of learning how to deal with stress</em>, which discusses managing stress and staying calm through work and responsibility.</p>
-        </div></div>
-      </div>
+  <div class="app">
+    <main class="wrap">
+      <h1>Accordion (HTML + CSS)</h1>
+      <p class="lead">Smooth open <em>and</em> close, springy easing, no JavaScript required — now with light/dark mode and polish.</p>
 
-      <div class="item">
-        <input type="checkbox" id="acc-2" />
-        <label class="summary" for="acc-2">Digital Literacy Project<span class="chev" aria-hidden="true"></span></label>
-        <div class="panel"><div class="panel-inner">
-          <img src="images/DigitalLiteracyAndColaboration.png" alt="Digital Literacy and Collaboration title slide" class="accordion-img" />
-          <p>This section contains the title slide for a group project on <strong>Digital Literacy and Collaboration</strong> by Kaylee, Allan, Udai, Karen, and Teresa. It emphasizes teamwork and online awareness in the digital age.</p>
-        </div></div>
-      </div>
+      <section class="accordion">
+        <div class="item">
+          <input type="checkbox" id="acc-1" />
+          <label class="summary" for="acc-1">Poem: The Helpfulness of Learning How to Deal with Stress<span class="chev" aria-hidden="true"></span></label>
+          <div class="panel"><div class="panel-inner">
+            <!-- Your original image path kept intact -->
+            <img src="images/SelfDirectedLearningPoemActivity.png" alt="Poem about dealing with stress" class="accordion-img" />
+            <p>This section features the poem titled <em>The helpfulness of learning how to deal with stress</em>, which discusses managing stress and staying calm through work and responsibility.</p>
+          </div></div>
+        </div>
 
-      <div class="item">
-        <input type="checkbox" id="acc-3" checked />
-        <label class="summary" for="acc-3">Springy animation?<span class="chev" aria-hidden="true"></span></label>
-        <div class="panel"><div class="panel-inner">
-          <p>Yep. Tweak <code>--dur</code> and <code>--ease</code> at the top to change timing and bounciness.</p>
-        </div></div>
-      </div>
+        <div class="item">
+          <input type="checkbox" id="acc-2" />
+          <label class="summary" for="acc-2">Digital Literacy Project<span class="chev" aria-hidden="true"></span></label>
+          <div class="panel"><div class="panel-inner">
+            <!-- Your original image path kept intact -->
+            <img src="images/DigitalLiteracyAndColaboration.png" alt="Digital Literacy and Collaboration title slide" class="accordion-img" />
+            <p>This section contains the title slide for a group project on <strong>Digital Literacy and Collaboration</strong> by Kaylee, Allan, Udai, Karen, and Teresa. It emphasizes teamwork and online awareness in the digital age.</p>
+          </div></div>
+        </div>
 
-      <div class="item">
-        <input type="checkbox" id="acc-4" />
-        <label class="summary" for="acc-4">Only one open at a time?<span class="chev" aria-hidden="true"></span></label>
-        <div class="panel"><div class="panel-inner">
-          <p>Swap each checkbox for a <code>type="radio" name="accordion"</code> and the labels will toggle a single shared group.</p>
-        </div></div>
-      </div>
-    </section>
-  </main>
+        <div class="item">
+          <input type="checkbox" id="acc-3" checked />
+          <label class="summary" for="acc-3">Springy animation?<span class="chev" aria-hidden="true"></span></label>
+          <div class="panel"><div class="panel-inner">
+            <p>Yep. Tweak <code>--dur</code> and <code>--ease</code> in <code>.app</code> to change timing and bounciness.</p>
+          </div></div>
+        </div>
+
+        <div class="item">
+          <input type="checkbox" id="acc-4" />
+          <label class="summary" for="acc-4">Only one open at a time?<span class="chev" aria-hidden="true"></span></label>
+          <div class="panel"><div class="panel-inner">
+            <p>Swap each checkbox for a <code>type="radio" name="accordion"</code> and the labels will toggle a single shared group.</p>
+          </div></div>
+        </div>
+      </section>
+    </main>
+  </div>
 </body>
 </html>
+
