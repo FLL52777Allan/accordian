@@ -1,113 +1,172 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Image Accordion (Link-Based)</title>
+<title>Accordion — Styled + Sites-proof (Fixed Links)</title>
 <style>
-  :root{
-    --bg:#0b0e12; --panel:#12161c; --text:#e9eef5; --muted:#9fb0c3; --accent:#60a5fa; --border:#1f2630;
-  }
-  @media (prefers-color-scheme: light){
-    :root{ --bg:#f6f7fb; --panel:#ffffff; --text:#0b1220; --muted:#48576a; --accent:#2563eb; --border:#e6e8ef; }
-  }
-  [data-theme="light"]{ --bg:#f6f7fb; --panel:#ffffff; --text:#0b1220; --muted:#48576a; --accent:#2563eb; --border:#e6e8ef; }
-  [data-theme="dark"] { --bg:#0b0e12; --panel:#12161c; --text:#e9eef5; --muted:#9fb0c3; --accent:#60a5fa; --border:#1f2630; }
+  :root{ --dur:560ms; --ease:cubic-bezier(.22,1.2,.32,1); --radius:16px; }
 
-  html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,sans-serif;}
-  .wrap{max-width:1000px;margin:32px auto;padding:0 16px;}
-  header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
-  .title{font-weight:700;letter-spacing:.2px;}
-  .toggle{border:1px solid var(--border);background:var(--panel);color:var(--text);padding:8px 12px;border-radius:12px;cursor:pointer}
-  .note{color:var(--muted);font-size:14px;margin:8px 0 16px}
+  html[data-theme="dark"]{
+    --bg:#0b0b10; --bg-accent:#1b1b28; --panel:#161923; --text:#e8e8f0; --muted:#a5a7b4;
+    --accent:#6aa6ff; --ring:#8ec1ff; --img-frame:#0e0e16;
+    --border:rgba(255,255,255,.14); --shadow:0 6px 24px rgba(0,0,0,.28);
+  }
+  html[data-theme="light"]{
+    --bg:#f6f7fb; --bg-accent:#ffffff; --panel:#ffffff; --text:#0e1320; --muted:#50586b;
+    --accent:#2f6bff; --ring:#89b4ff; --img-frame:#eef1f8;
+    --border:rgba(3,8,20,.12); --shadow:0 2px 16px rgba(0,0,0,.08);
+  }
+
+  html,body{height:100%;margin:0}
+  body{
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial,"Noto Sans";
+    color:var(--text);
+    background:radial-gradient(1000px 500px at 20% -10%, var(--bg-accent) 0%, var(--bg) 60%);
+    transition:background-color .25s ease,color .25s ease;
+  }
+  .wrap{max-width:720px;margin:clamp(24px,6vw,64px) auto;padding:0 16px}
+  h1{margin:0 0 12px}.lead{color:var(--muted);margin:0 0 24px}
+
+  .theme-switch{display:flex;justify-content:flex-end;margin:12px 0}
+  .theme-btn{
+    background:var(--panel); color:var(--text); border:1px solid var(--border);
+    padding:10px 14px; border-radius:999px; cursor:pointer; user-select:none;
+    box-shadow:var(--shadow); transition:transform .15s ease, background-color .25s ease, color .25s ease;
+  }
+  .theme-btn:hover{transform:translateY(-1px)}
 
   .accordion{display:grid;gap:12px}
-  details{
-    background:var(--panel);
-    border:1px solid var(--border);
-    border-radius:16px;
-    overflow:hidden;
-    box-shadow:0 6px 20px rgba(0,0,0,.08);
+  .item{
+    position:relative; border:1px solid var(--border); border-radius:var(--radius);
+    background:var(--panel); box-shadow:var(--shadow);
+    transition:box-shadow .24s ease, border-color .24s ease, background-color .24s ease;
   }
-  summary{
-    list-style:none; cursor:pointer; padding:16px 20px; position:relative; font-weight:600;
-    display:flex; align-items:center; gap:12px;
+  html[data-theme="dark"] .item{ background:linear-gradient(180deg, var(--panel) 0%, #10131e 100%) }
+
+  .item>input{position:absolute; inset:0; opacity:0; pointer-events:none}
+  .summary{
+    cursor:pointer; display:grid; grid-template-columns:1fr auto; align-items:center; gap:12px;
+    padding:16px 18px; font-weight:600; user-select:none;
   }
-  summary::-webkit-details-marker{display:none}
-  summary:after{
-    content:"▸"; position:absolute; right:16px; transition:transform .2s ease;
-    font-size:18px; color:var(--muted);
+  .summary:focus-visible{outline:none; box-shadow:0 0 0 3px var(--ring); border-radius:calc(var(--radius) - 2px)}
+  .chev{font-size:14px; color:var(--muted); transition:transform calc(var(--dur)*.85) var(--ease), color .22s ease}
+  .chev::before{content:"▶"}
+
+  .panel{display:grid; grid-template-rows:0fr; transition:grid-template-rows var(--dur) var(--ease)}
+  .panel>.panel-inner{overflow:hidden}
+  .panel-inner>*{
+    opacity:0; transform:translateY(-6px) scale(.985);
+    transition:opacity calc(var(--dur)*.8) var(--ease), transform calc(var(--dur)*.8) var(--ease);
+    color:var(--muted); line-height:1.6; padding:0 18px;
   }
-  details[open] summary:after{ transform:rotate(90deg); }
-  .panel{
-    border-top:1px solid var(--border);
-    padding:14px 16px 18px;
+  .item>input:checked ~ .panel{grid-template-rows:1fr}
+  .item>input:checked ~ .summary .chev{transform:rotate(90deg); color:var(--accent)}
+  .item>input:checked ~ .panel .panel-inner>*{opacity:1; transform:none; transition-delay:80ms}
+
+  img.accordion-img{
+    display:block; width:100%; height:auto; border-radius:14px; margin:12px auto;
+    background:var(--img-frame); border:1px solid var(--border);
   }
-  .img{
-    width:100%; height:auto; display:block; border-radius:12px;
-    border:1px solid var(--border);
+  @media (prefers-reduced-motion:reduce){
+    .panel, .panel-inner>*, .summary .chev, .theme-btn{transition:none !important}
   }
-  .caption{color:var(--muted); font-size:13px; margin-top:8px}
-  .grid{display:grid; gap:12px}
-  @media (min-width:720px){ .grid{ grid-template-columns:repeat(2,1fr); } }
 </style>
 </head>
 <body>
-<div class="wrap" id="app">
-  <header>
-    <div class="title">📁 Image Accordion (Use Your Own Links)</div>
-    <button class="toggle" id="themeBtn" type="button">Toggle Light/Dark</button>
-  </header>
 
-  <p class="note">
-    Paste your direct image links below — e.g. <code>https://i.imgur.com/abcd123.jpg</code> or <code>https://dl.dropboxusercontent.com/xyz/pic.png</code>.
-  </p>
+  <div class="theme-switch">
+    <button class="theme-btn" id="toggleTheme" type="button">🌗 Light / Dark</button>
+  </div>
 
-  <section class="accordion">
-    <!-- Panel 1 -->
-    <details open>
-      <summary>Digital Literacy and Colaboration</summary>
-      <div class="panel">
-        <img class="img" src="https://drive.google.com/file/d/1pqxXSBHgx8qyMvI2sEKm4ONcGRSbWQKu/view?usp=drive_link" alt="Image 1" loading="lazy" />
-        <div class="caption">Replace “PASTE_LINK_HERE_1” with your first image link.</div>
+  <main class="wrap">
+    <h1>Accordion (HTML + CSS)</h1>
+    <p class="lead">Springy open & close, light/dark, same design — with link-ready images.</p>
+
+    <section class="accordion">
+      <!-- 1) Poem -->
+      <div class="item">
+        <input type="checkbox" id="acc-1" />
+        <label class="summary" for="acc-1">
+          Poem: The Helpfulness of Learning How to Deal with Stress
+          <span class="chev" aria-hidden="true"></span>
+        </label>
+        <div class="panel"><div class="panel-inner">
+          <img class="accordion-img ext-img" data-url="https://drive.google.com/file/d/17aKclJArFy_K5PGsF8E-4ZMzuNg6rIia/view?usp=drive_link" alt="Poem about dealing with stress" />
+          <p>This section features the poem titled <em>The helpfulness of learning how to deal with stress</em>.</p>
+        </div></div>
       </div>
-    </details>
 
-    <!-- Panel 2 -->
-    <details>
-      <summary>Self-Directed Learning Activity (Poem)</summary>
-      <div class="panel">
-        <div class="grid">
-          <img class="img" src="https://drive.google.com/file/d/17aKclJArFy_K5PGsF8E-4ZMzuNg6rIia/view?usp=drive_link" alt="Gallery 1" loading="lazy" />
-        </div>
-        <div class="caption">Replace the placeholders above with your hosted links.</div>
+      <!-- 2) Digital Literacy -->
+      <div class="item">
+        <input type="checkbox" id="acc-2" />
+        <label class="summary" for="acc-2">
+          Digital Literacy Project
+          <span class="chev" aria-hidden="true"></span>
+        </label>
+        <div class="panel"><div class="panel-inner">
+          <img class="accordion-img ext-img" data-url="https://drive.google.com/file/d/1pqxXSBHgx8qyMvI2sEKm4ONcGRSbWQKu/view?usp=drive_link" alt="Digital Literacy and Collaboration title slide" />
+          <p>Group project on <strong>Digital Literacy and Collaboration</strong> by Kaylee, Allan, Udai, Karen and Teresa.</p>
+        </div></div>
       </div>
-    </details>
 
-    <!-- Panel 3 -->
-    <details>
-      <summary>Oktapodi POV/Perspective task</summary>
-      <div class="panel">
-        <img class="img" src="PASTE_LINK_HERE_4" alt="Extra Image" loading="lazy" />
-        <div class="caption">Add as many sections as you like.</div>
+      <!-- 3) Oktapodi -->
+      <div class="item">
+        <input type="checkbox" id="acc-3" />
+        <label class="summary" for="acc-3">
+          Oktapodi POV Perspective Task
+          <span class="chev" aria-hidden="true"></span>
+        </label>
+        <div class="panel"><div class="panel-inner">
+          <img class="accordion-img ext-img" data-url="PASTE_LINK_HERE_3" alt="Oktapodi POV Perspective task" />
+          <p>This section contains the <em>Oktapodi POV Perspective Task</em> image.</p>
+        </div></div>
       </div>
-    </details>
-  </section>
-</div>
+    </section>
+  </main>
 
-<script>
+  <!-- Theme toggle -->
+  <script>
+    (function(){
+      const KEY='accordion-theme';
+      const html=document.documentElement;
+      try{ const saved=localStorage.getItem(KEY);
+        if(saved==='light'||saved==='dark') html.setAttribute('data-theme', saved);
+      }catch(e){}
+      document.getElementById('toggleTheme').addEventListener('click',()=>{
+        const next=html.getAttribute('data-theme')==='dark'?'light':'dark';
+        html.setAttribute('data-theme', next);
+        try{ localStorage.setItem(KEY,next);}catch(e){}
+      });
+    })();
+  </script>
+
+  <!-- Image link fixer -->
+  <script>
   (function(){
-    const root = document.documentElement;
-    const btn  = document.getElementById('themeBtn');
-    const key  = 'accordion-theme';
-    const set  = t => { root.setAttribute('data-theme', t); localStorage.setItem(key, t); };
-    const cur  = localStorage.getItem(key);
-    if(cur) set(cur);
-    btn.addEventListener('click', ()=>{
-      const next = (root.getAttribute('data-theme') === 'light') ? 'dark' : 'light';
-      set(next || 'dark');
+    function toDirect(u){
+      if(!u) return "";
+      u=String(u).trim();
+      if(/\.(png|jpe?g|webp|gif|bmp|svg)(\?.*)?$/i.test(u)) return u;
+      const g1=u.match(/drive\.google\.com\/file\/d\/([^/]+)\//i);
+      if(g1&&g1[1]) return `https://drive.google.com/uc?export=view&id=${g1[1]}`;
+      const g2=u.match(/drive\.google\.com\/open\?id=([^&]+)/i);
+      if(g2&&g2[1]) return `https://drive.google.com/uc?export=view&id=${g2[1]}`;
+      if(/dropbox\.com\/s\//i.test(u))
+        return u.replace('www.dropbox.com','dl.dropboxusercontent.com').replace(/\?dl=\d$/,'');
+      return u;
+    }
+    document.querySelectorAll('img.ext-img').forEach((img,i)=>{
+      const raw=img.dataset.url;
+      if(!raw){img.alt='(no link)';return;}
+      const direct=toDirect(raw);
+      img.src=direct;
+      img.addEventListener('error',()=>{
+        img.style.opacity='0.6';
+        img.insertAdjacentHTML('afterend',`<p style="color:#f66;font-size:13px;margin:4px 18px;">⚠️ Image ${i+1} failed — check link sharing & format.</p>`);
+      });
     });
   })();
-</script>
+  </script>
 </body>
 </html>
