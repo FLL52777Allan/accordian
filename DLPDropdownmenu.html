@@ -24,8 +24,34 @@
     .theme-btn:hover{transform:translateY(-1px)}
 
     .accordion{display:grid;gap:12px}
-    .item{position:relative;border:1px solid rgba(128,128,160,.25);background:linear-gradient(180deg,var(--panel) 0%, rgba(16,16,26,1) 100%);border-radius:var(--radius);box-shadow:var(--shadow);transition:box-shadow 240ms ease,border-color 240ms ease,background-color 240ms ease}
-    .item:hover{box-shadow:0 0 0 1px rgba(0,0,0,0) inset,0 14px 44px rgba(0,0,0,.35),0 0 0 3px rgba(106,166,255,.3)}
+    ./* Accordion item appearance */
+.item {
+  position: relative;
+  border: 1px solid rgba(128,128,160,.25);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  transition: box-shadow 240ms ease, border-color 240ms ease, background-color 240ms ease;
+  background: var(--panel); /* solid white in light mode, dark in dark mode */
+}
+
+/* Dark mode: add subtle gradient */
+html[data-theme="dark"] .item {
+  background: linear-gradient(180deg, var(--panel) 0%, #10101a 100%);
+}
+
+/* Hover glow */
+.item:hover {
+  box-shadow:
+    0 0 0 1px rgba(0,0,0,0) inset,
+    0 14px 44px rgba(0,0,0,.35),
+    0 0 0 3px rgba(106,166,255,.3);
+}
+
+/* Softer shadow in light mode */
+html[data-theme="light"] .item {
+  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+}
+
     .item>input{position:absolute;inset:0;opacity:0;pointer-events:none}
     .summary{cursor:pointer;display:grid;grid-template-columns:1fr auto;align-items:center;gap:12px;padding:16px 18px;font-weight:600;user-select:none}
     .summary:focus-visible{outline:none;box-shadow:0 0 0 3px var(--ring);border-radius:calc(var(--radius) - 2px)}
