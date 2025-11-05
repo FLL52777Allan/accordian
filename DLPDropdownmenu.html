@@ -1,185 +1,103 @@
 <!doctype html>
 <html lang="en" data-theme="dark">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Accordion — HTML + CSS (GitHub Pages solid)</title>
-  <style>
-    :root { --dur:560ms; --ease:cubic-bezier(.22,1.2,.32,1); --radius:16px; }
-    html[data-theme="dark"]{ --bg:#0b0b10; --bg-accent:#1b1b28; --panel:#12121a; --text:#e8e8f0; --muted:#a5a7b4; --accent:#6aa6ff; --ring:#8ec1ff; --img-frame:#0e0e16; --shadow:0 0 0 1px rgba(255,255,255,0.02) inset,0 8px 30px rgba(0,0,0,.25); }
-    html[data-theme="light"]{ --bg:#f6f7fb; --bg-accent:#ffffff; --panel:#ffffff; --text:#0e1320; --muted:#50586b; --accent:#2f6bff; --ring:#89b4ff; --img-frame:#eef1f8; --shadow:0 0 0 1px rgba(3,8,20,0.05) inset,0 8px 30px rgba(3,8,20,.08); }
-
-    html,body{height:100%;margin:0}
-    body{
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial,"Noto Sans";
-      color:var(--text);
-      background:radial-gradient(1200px 600px at 20% -10%, var(--bg-accent) 0%, var(--bg) 60%);
-      transition:background-color 300ms ease,color 300ms ease;
-    }
-    .wrap{max-width:720px;margin:clamp(24px,6vw,64px) auto;padding:0 16px}
-    h1{margin:0 0 12px}.lead{color:var(--muted);margin:0 0 24px}
-
-    .theme-switch{position:sticky;top:12px;display:flex;justify-content:flex-end;max-width:720px;margin:12px auto 0;padding:0 16px;z-index:2}
-    .theme-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;background:var(--panel);color:var(--text);border:1px solid rgba(128,128,160,.25);box-shadow:var(--shadow);cursor:pointer;user-select:none;transition:transform 160ms ease, background-color 300ms ease, color 300ms ease}
-    .theme-btn:hover{transform:translateY(-1px)}
-
-    .accordion{display:grid;gap:12px}
-    ./* Accordion item appearance */
-.item {
-  position: relative;
-  border: 1px solid rgba(128,128,160,.25);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  transition: box-shadow 240ms ease, border-color 240ms ease, background-color 240ms ease;
-  background: var(--panel); /* solid white in light mode, dark in dark mode */
-}
-
-/* Dark mode: add subtle gradient */
-html[data-theme="dark"] .item {
-  background: linear-gradient(180deg, var(--panel) 0%, #10101a 100%);
-}
-
-/* Hover glow */
-.item:hover {
-  box-shadow:
-    0 0 0 1px rgba(0,0,0,0) inset,
-    0 14px 44px rgba(0,0,0,.35),
-    0 0 0 3px rgba(106,166,255,.3);
-}
-
-/* Softer shadow in light mode */
-html[data-theme="light"] .item {
-  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
-}
-
-    .item>input{position:absolute;inset:0;opacity:0;pointer-events:none}
-    .summary{cursor:pointer;display:grid;grid-template-columns:1fr auto;align-items:center;gap:12px;padding:16px 18px;font-weight:600;user-select:none}
-    .summary:focus-visible{outline:none;box-shadow:0 0 0 3px var(--ring);border-radius:calc(var(--radius) - 2px)}
-    .chev{font-size:14px;color:var(--muted);transition:transform calc(var(--dur)*.85) var(--ease), color 220ms ease}
-    .chev::before{content:"▶"}
-
-    .panel{display:grid;grid-template-rows:0fr;transition:grid-template-rows var(--dur) var(--ease)}
-    .panel>.panel-inner{overflow:hidden}
-    .panel-inner>*{opacity:0;transform:translateY(-6px) scale(.98);transition:opacity calc(var(--dur)*.8) var(--ease), transform calc(var(--dur)*.8) var(--ease);color:var(--muted);line-height:1.6;padding:0 18px}
-    .item>input:checked~.panel{grid-template-rows:1fr}
-    .item>input:checked~.summary .chev{transform:rotate(90deg);color:var(--accent)}
-    .item>input:checked~.panel .panel-inner>*{opacity:1;transform:none;transition-delay:80ms}
-
-    img.accordion-img{display:block;width:100%;height:auto;border-radius:14px;margin:12px auto;background:var(--img-frame);border:1px solid rgba(128,128,160,.25);box-shadow:0 10px 28px rgba(3,8,20,.35)}
-    @media (prefers-reduced-motion:reduce){.panel,.panel-inner>*,.summary .chev,.theme-btn{transition:none!important}}
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Accordion — Final Stable Build</title>
+<style>
+:root{--dur:560ms;--ease:cubic-bezier(.22,1.2,.32,1);--radius:16px;}
+html[data-theme="dark"]{--bg:#0b0b10;--bg-accent:#1b1b28;--panel:#12121a;--text:#e8e8f0;--muted:#a5a7b4;--accent:#6aa6ff;--ring:#8ec1ff;--img-frame:#0e0e16;--shadow:0 0 0 1px rgba(255,255,255,.02) inset,0 8px 30px rgba(0,0,0,.25);}
+html[data-theme="light"]{--bg:#f6f7fb;--bg-accent:#fff;--panel:#fff;--text:#0e1320;--muted:#50586b;--accent:#2f6bff;--ring:#89b4ff;--img-frame:#eef1f8;--shadow:0 0 0 1px rgba(3,8,20,.05) inset,0 8px 30px rgba(3,8,20,.08);}
+html,body{height:100%;margin:0}
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial,"Noto Sans";color:var(--text);
+background:radial-gradient(1200px 600px at 20% -10%,var(--bg-accent)0%,var(--bg)60%);
+transition:background-color 300ms ease,color 300ms ease}
+.wrap{max-width:720px;margin:clamp(24px,6vw,64px) auto;padding:0 16px}
+h1{margin:0 0 12px}.lead{color:var(--muted);margin:0 0 24px}
+.theme-switch{position:sticky;top:12px;display:flex;justify-content:flex-end;max-width:720px;margin:12px auto 0;padding:0 16px;z-index:2}
+.theme-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;background:var(--panel);color:var(--text);border:1px solid rgba(128,128,160,.25);box-shadow:var(--shadow);cursor:pointer;transition:transform 160ms ease,background-color 300ms ease,color 300ms ease}
+.theme-btn:hover{transform:translateY(-1px)}
+.accordion{display:grid;gap:12px}
+/* solid white in light mode, gradient only in dark */
+.item{position:relative;border:1px solid rgba(128,128,160,.25);border-radius:var(--radius);
+box-shadow:var(--shadow);transition:box-shadow 240ms ease,border-color 240ms ease,background-color 240ms ease;background:var(--panel)}
+html[data-theme="dark"] .item{background:linear-gradient(180deg,var(--panel)0%,#10101a 100%)}
+.item:hover{box-shadow:0 0 0 1px rgba(0,0,0,0) inset,0 14px 44px rgba(0,0,0,.35),0 0 0 3px rgba(106,166,255,.3)}
+html[data-theme="light"] .item{box-shadow:0 2px 16px rgba(0,0,0,0.08)}
+.item>input{position:absolute;inset:0;opacity:0;pointer-events:none}
+.summary{cursor:pointer;display:grid;grid-template-columns:1fr auto;align-items:center;gap:12px;padding:16px 18px;font-weight:600;user-select:none}
+.summary:focus-visible{outline:none;box-shadow:0 0 0 3px var(--ring);border-radius:14px}
+.chev{font-size:14px;color:var(--muted);transition:transform calc(var(--dur)*.85)var(--ease),color 220ms ease}
+.chev::before{content:"▶"}
+.panel{display:grid;grid-template-rows:0fr;transition:grid-template-rows var(--dur)var(--ease)}
+.panel>.panel-inner{overflow:hidden}
+.panel-inner>*{opacity:0;transform:translateY(-6px)scale(.98);transition:opacity calc(var(--dur)*.8)var(--ease),transform calc(var(--dur)*.8)var(--ease);color:var(--muted);line-height:1.6;padding:0 18px}
+.item>input:checked~.panel{grid-template-rows:1fr}
+.item>input:checked~.summary .chev{transform:rotate(90deg);color:var(--accent)}
+.item>input:checked~.panel .panel-inner>*{opacity:1;transform:none;transition-delay:80ms}
+img.accordion-img{display:block;width:100%;height:auto;border-radius:14px;margin:12px auto;background:var(--img-frame);border:1px solid rgba(128,128,160,.25);box-shadow:0 10px 28px rgba(3,8,20,.35)}
+</style>
 </head>
 <body>
+<div class="theme-switch">
+  <button class="theme-btn" id="toggleTheme" type="button">🌗 Light / Dark</button>
+</div>
 
-  <div class="theme-switch">
-    <button class="theme-btn" id="toggleTheme" type="button">🌗 Light / Dark</button>
-  </div>
+<main class="wrap">
+  <h1>Accordion (HTML + CSS)</h1>
+  <p class="lead">Smooth open <em>and</em> close, springy easing — now stable for Google Sites and GitHub Pages.</p>
 
-  <main class="wrap">
-    <h1>Accordion (HTML + CSS)</h1>
-    <p class="lead">Smooth open <em>and</em> close, springy easing — rock-solid on GitHub Pages.</p>
+  <section class="accordion">
+    <div class="item">
+      <input type="checkbox" id="acc-1" />
+      <label class="summary" for="acc-1">
+        Poem: The Helpfulness of Learning How to Deal with Stress<span class="chev" aria-hidden="true"></span>
+      </label>
+      <div class="panel"><div class="panel-inner">
+        <img src="https://fll52777allan.github.io/accordian/images/SelfDirectedLearningPoemActivity.png"
+             alt="Poem about dealing with stress" class="accordion-img" />
+        <p>This section features the poem titled <em>The helpfulness of learning how to deal with stress</em>.</p>
+      </div></div>
+    </div>
 
-    <section class="accordion">
-      <div class="item">
-        <input type="checkbox" id="acc-1" />
-        <label class="summary" for="acc-1">
-          Poem: The Helpfulness of Learning How to Deal with Stress
-          <span class="chev" aria-hidden="true"></span>
-        </label>
-        <div class="panel"><div class="panel-inner">
-          <!-- The JS below will auto-resolve the correct path -->
-          <img id="img1" class="accordion-img" alt="Poem about dealing with stress" />
-          <p>This section features the poem titled <em>The helpfulness of learning how to deal with stress</em>.</p>
-        </div></div>
-      </div>
+    <div class="item">
+      <input type="checkbox" id="acc-2" />
+      <label class="summary" for="acc-2">
+        Digital Literacy Project<span class="chev" aria-hidden="true"></span>
+      </label>
+      <div class="panel"><div class="panel-inner">
+        <img src="https://fll52777allan.github.io/accordian/images/DigitalLiteracyAndColaboration.png"
+             alt="Digital Literacy and Collaboration title slide" class="accordion-img" />
+        <p>Group project on <strong>Digital Literacy and Collaboration</strong> by Kaylee, Allan, Udai, Karen and Teresa.</p>
+      </div></div>
+    </div>
 
-      <div class="item">
-        <input type="checkbox" id="acc-2" />
-        <label class="summary" for="acc-2">
-          Digital Literacy Project
-          <span class="chev" aria-hidden="true"></span>
-        </label>
-        <div class="panel"><div class="panel-inner">
-          <!-- The JS below will auto-resolve the correct path -->
-          <img id="img2" class="accordion-img" alt="Digital Literacy and Collaboration title slide" />
-          <p>Title slide for <strong>Digital Literacy and Collaboration</strong> by Kaylee, Allan, Udai, Karen, and Teresa.</p>
-        </div></div>
-      </div>
+    <div class="item">
+      <input type="checkbox" id="acc-3" />
+      <label class="summary" for="acc-3">
+        Oktapodi POV Perspective Task<span class="chev" aria-hidden="true"></span>
+      </label>
+      <div class="panel"><div class="panel-inner">
+        <img src="https://fll52777allan.github.io/accordian/images/Oktapodi%20POV%20Perspective%20task.png"
+             alt="Oktapodi POV Perspective task" class="accordion-img" referrerpolicy="no-referrer" crossorigin="anonymous" />
+        <p>This section contains the <em>Oktapodi POV Perspective Task</em> image.</p>
+      </div></div>
+    </div>
+  </section>
+</main>
 
-
-
-      <div class="item">
-        <input type="checkbox" id="acc-3" />
-        <label class="summary" for="acc-3">
-          Oktapodi POV Perspective task
-          <span class="chev" aria-hidden="true"></span>
-        </label>
-        <div class="panel"><div class="panel-inner">
-          <!-- The JS below will auto-resolve the correct path -->
-          <img
-  src="https://raw.githubusercontent.com/fll52777allan/accordian/main/images/Oktapodi%20POV%20Perspective%20task.png"
-  alt="Oktapodi POV Perspective task"
-  class="accordion-img"
-  referrerpolicy="no-referrer"
-/>
-
-          <p>This section features the poem titled <em>The helpfulness of learning how to deal with stress</em>.</p>
-        </div></div>
-      </div>
-      
-  <script>
-    // Theme toggle via data-theme (works on GitHub Pages)
-    (function(){
-      const KEY='accordion-theme';
-      const html=document.documentElement;
-      const saved=localStorage.getItem(KEY);
-      if(saved==='light'||saved==='dark'){ html.setAttribute('data-theme', saved); }
-      document.getElementById('toggleTheme').addEventListener('click',()=>{
-        const next=html.getAttribute('data-theme')==='dark'?'light':'dark';
-        html.setAttribute('data-theme',next);
-        try{ localStorage.setItem(KEY,next); }catch(e){}
-      });
-    })();
-
-    // Robust image path resolver for GitHub Pages
-    (function(){
-      /** Build candidate URLs relative to the current page and the repo root */
-      function candidates(filename){
-        const loc = window.location;
-        // e.g. /accordian/DLPDropdownmenu.html -> /accordian/
-        const baseDir = loc.pathname.replace(/[^/]+$/, '');
-        const projectRoot = '/accordian/'; // your repo path from the URL you gave
-        return [
-          baseDir + filename,                 // same folder as the HTML
-          baseDir + 'images/' + filename,     // images/ subfolder next to the HTML
-          projectRoot + filename,             // repo root + file
-          projectRoot + 'images/' + filename  // /accordian/images/filename
-        ];
-      }
-
-      function loadFirstWorking(imgEl, filename){
-        const tries = candidates(filename);
-        let i = 0;
-        function next(){
-          if(i >= tries.length){
-            imgEl.replaceWith(Object.assign(document.createElement('div'), {
-              className: 'img-fallback',
-              innerHTML: '⚠️ Missing image: <code>'+filename+'</code> (tried: same folder and <code>/accordian/images/</code>)'
-            }));
-            return;
-          }
-          const url = tries[i++];
-          const probe = new Image();
-          probe.onload = () => { imgEl.src = url; };
-          probe.onerror = next;
-          probe.src = url;
-        }
-        next();
-      }
-
-      loadFirstWorking(document.getElementById('img1'), 'SelfDirectedLearningPoemActivity.png');
-      loadFirstWorking(document.getElementById('img2'), 'DigitalLiteracyAndColaboration.png');
-    })();
-  </script>
+<script>
+(function(){
+  const KEY='accordion-theme';
+  const html=document.documentElement;
+  const saved=localStorage.getItem(KEY);
+  if(saved==='light'||saved==='dark'){html.setAttribute('data-theme',saved);}
+  document.getElementById('toggleTheme').addEventListener('click',()=>{
+    const next=html.getAttribute('data-theme')==='dark'?'light':'dark';
+    html.setAttribute('data-theme',next);
+    try{localStorage.setItem(KEY,next);}catch(e){}
+  });
+})();
+</script>
 </body>
 </html>
