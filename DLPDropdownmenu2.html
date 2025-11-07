@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Accordion — Styled + Gallery</title>
+<title>Accordion — Styled + Gallery + Edge Fade</title>
 <style>
   :root{ --dur:560ms; --ease:cubic-bezier(.22,1.2,.32,1); --radius:16px; }
 
-  /* Themes */
+  /* THEMES */
   html[data-theme="dark"]{
     --bg:#0b0b10; --bg-accent:#1b1b28; --panel:#161923; --text:#e8e8f0; --muted:#a5a7b4;
     --accent:#6aa6ff; --ring:#8ec1ff; --img-frame:#0e0e16;
@@ -29,7 +29,7 @@
   .wrap{max-width:720px;margin:clamp(24px,6vw,64px) auto;padding:0 16px}
   h1{margin:0 0 12px}.lead{color:var(--muted);margin:0 0 24px}
 
-  /* Theme toggle */
+  /* THEME TOGGLE */
   .theme-switch{display:flex;justify-content:flex-end;margin:12px 0}
   .theme-btn{
     background:var(--panel); color:var(--text); border:1px solid var(--border);
@@ -38,16 +38,38 @@
   }
   .theme-btn:hover{transform:translateY(-1px)}
 
-  /* Accordion container: mostly black with soft white edges */
+  /* ACCORDION BODY */
   .accordion{
     position:relative;
-    background: radial-gradient(circle at center,
-                #000 60%, #111 78%, #222 88%, #ffffff 115%);
     border-radius:20px;
     padding:24px 0;
+    background:linear-gradient(180deg,#111 0%,#0c0c0c 100%);
   }
 
-  /* Accordions */
+  /* ---- FADE THE ACCORDION EDGES (dark mode only) ---- */
+  html[data-theme="dark"] .accordion {
+    isolation:isolate;
+    overflow:hidden;
+  }
+  html[data-theme="dark"] .accordion::after {
+    content:"";
+    position:absolute;
+    inset:0;
+    border-radius:22px;
+    pointer-events:none;
+    z-index:1;
+    background:radial-gradient(
+      circle at center,
+      rgba(0,0,0,0) 60%,
+      rgba(255,255,255,0.05) 75%,
+      rgba(255,255,255,0.15) 85%,
+      rgba(255,255,255,0.25) 92%,
+      rgba(255,255,255,0.45) 100%
+    );
+    mix-blend-mode:lighten;
+  }
+
+  /* ACCORDION ITEMS */
   .accordion .item{
     position:relative; border:1px solid var(--border); border-radius:var(--radius);
     background:var(--panel); box-shadow:var(--shadow);
@@ -67,7 +89,7 @@
   .chev{font-size:14px; color:var(--muted); transition:transform calc(var(--dur)*.85) var(--ease), color .22s ease}
   .chev::before{content:"▶"}
 
-  /* Springy open/close */
+  /* SPRINGY OPEN/CLOSE */
   .panel{display:grid; grid-template-rows:0fr; transition:grid-template-rows var(--dur) var(--ease)}
   .panel>.panel-inner{overflow:hidden}
   .panel-inner>*{
@@ -79,31 +101,31 @@
   .item>input:checked ~ .summary .chev{transform:rotate(90deg); color:var(--accent)}
   .item>input:checked ~ .panel .panel-inner>*{opacity:1; transform:none; transition-delay:80ms}
 
-  /* Images + fade-in */
+  /* IMAGES */
   img.accordion-img{
     display:block; width:100%; height:auto; border-radius:14px; margin:12px auto;
     background:var(--img-frame); border:1px solid var(--border);
     opacity:0; transition:opacity .35s ease;
   }
-  img.accordion-img.is-loaded{ opacity:1; }
+  img.accordion-img.is-loaded{opacity:1;}
 
-  /* ----- Gallery (Section 2) ----- */
+  /* GALLERY */
   .gallery{
     display:grid; gap:12px; grid-template-columns:1fr; padding:0 18px 12px;
   }
   @media (min-width:560px){ .gallery{ grid-template-columns:repeat(2,1fr); } }
   @media (min-width:880px){ .gallery{ grid-template-columns:repeat(3,1fr); } }
 
-  .gallery figure{ margin:0; }
-  .gallery a{ display:block; text-decoration:none; }
+  .gallery figure{margin:0}
+  .gallery a{display:block;text-decoration:none}
   .gallery .gimg{
-    display:block; width:100%; height:auto; border-radius:14px;
-    background:var(--img-frame); border:1px solid var(--border);
+    display:block;width:100%;height:auto;border-radius:14px;
+    background:var(--img-frame);border:1px solid var(--border);
     transition:transform .15s ease;
   }
-  .gallery .gimg:hover{ transform:translateY(-2px); }
+  .gallery .gimg:hover{transform:translateY(-2px)}
   .gallery figcaption{
-    color:var(--muted); font-size:12px; margin-top:6px; padding:0 2px;
+    color:var(--muted);font-size:12px;margin-top:6px;padding:0 2px;
   }
 
   @media (prefers-reduced-motion:reduce){
@@ -130,7 +152,6 @@
           <span class="chev" aria-hidden="true"></span>
         </label>
         <div class="panel"><div class="panel-inner">
-          <!-- Placeholder image (replace data-url later) -->
           <img class="accordion-img ext-img"
                data-url="https://placehold.co/1200x700/png?text=Poem+Hero"
                alt="Poem about dealing with stress" loading="lazy" />
@@ -171,30 +192,6 @@
               </a>
               <figcaption>Caption 3 (optional)</figcaption>
             </figure>
-            <figure>
-              <a href="#" target="_blank" rel="noopener">
-                <img class="accordion-img ext-img gimg" loading="lazy"
-                     data-url="https://placehold.co/800x600/png?text=Gallery+4"
-                     alt="Gallery image 4">
-              </a>
-              <figcaption>Caption 4 (optional)</figcaption>
-            </figure>
-            <figure>
-              <a href="#" target="_blank" rel="noopener">
-                <img class="accordion-img ext-img gimg" loading="lazy"
-                     data-url="https://placehold.co/800x600/png?text=Gallery+5"
-                     alt="Gallery image 5">
-              </a>
-              <figcaption>Caption 5 (optional)</figcaption>
-            </figure>
-            <figure>
-              <a href="#" target="_blank" rel="noopener">
-                <img class="accordion-img ext-img gimg" loading="lazy"
-                     data-url="https://placehold.co/800x600/png?text=Gallery+6"
-                     alt="Gallery image 6">
-              </a>
-              <figcaption>Caption 6 (optional)</figcaption>
-            </figure>
           </div>
           <p>Group project on <strong>Digital Literacy and Collaboration</strong> by Kaylee, Allan, Udai, Karen and Teresa.</p>
         </div></div>
@@ -208,7 +205,6 @@
           <span class="chev" aria-hidden="true"></span>
         </label>
         <div class="panel"><div class="panel-inner">
-          <!-- Placeholder image -->
           <img class="accordion-img ext-img"
                data-url="https://placehold.co/1200x700/png?text=Oktapodi+Task"
                alt="Oktapodi POV Perspective task" loading="lazy" />
@@ -235,7 +231,7 @@
     })();
   </script>
 
-  <!-- Image link fixer + fade-in + make gallery tiles clickable -->
+  <!-- Image loader -->
   <script>
   (function(){
     function toDirect(u){
@@ -257,15 +253,11 @@
 
       const direct=toDirect(raw);
       img.src = direct;
-
-      // fade-in when loaded
       img.addEventListener('load', ()=> img.classList.add('is-loaded'));
 
-      // clickable gallery item = open full image
       const link = img.closest('a');
       if (link) link.href = direct;
 
-      // lightweight error note (doesn't change layout)
       img.addEventListener('error', ()=>{
         img.style.opacity='0.6';
         img.insertAdjacentHTML('afterend',
