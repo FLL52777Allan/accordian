@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stylish Button with Light/Dark Mode</title>
+
+  <style>
+    :root {
+      --dur: 0.35s;
+      --ease: cubic-bezier(.22,1.2,.32,1);
+    }
+
+    /* Light Theme */
+    html[data-theme="light"] {
+      --bg: linear-gradient(135deg, #f2f3f7, #ffffff);
+      --text: #1b1b28;
+      --muted: #5a5c63;
+      --accent1: #6aa6ff;
+      --accent2: #8ec1ff;
+      --shadow: rgba(0, 0, 0, 0.15);
+      --glow: rgba(106, 166, 255, 0.5);
+    }
+
+    /* Dark Theme */
+    html[data-theme="dark"] {
+      --bg: linear-gradient(135deg, #0b0b10, #1b1b28);
+      --text: #e8e8f0;
+      --muted: #a5a7b4;
+      --accent1: #6aa6ff;
+      --accent2: #8ec1ff;
+      --shadow: rgba(0, 0, 0, 0.4);
+      --glow: rgba(106, 166, 255, 0.6);
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
+    }
+
+    /* Top-right theme toggle button (smaller and cleaner) */
+    .theme-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: transparent;
+      border: 1.5px solid var(--accent1);
+      color: var(--text);
+      padding: 6px 14px;
+      border-radius: 25px;
+      font-size: 13px;
+      cursor: pointer;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      transition: all var(--dur) var(--ease);
+      opacity: 0.8;
+    }
+
+    .theme-toggle:hover {
+      background: var(--accent1);
+      color: white;
+      box-shadow: 0 4px 12px var(--glow);
+      transform: translateY(-1px);
+      opacity: 1;
+    }
+
+    .button-container {
+      text-align: center;
+    }
+
+    .fancy-button {
+      background: linear-gradient(90deg, var(--accent1), var(--accent2));
+      color: white;
+      border: none;
+      border-radius: 40px;
+      padding: 16px 40px;
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      box-shadow: 0 6px 20px var(--shadow);
+      transition: all var(--dur) var(--ease);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .fancy-button::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -75%;
+      width: 50%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.25);
+      transform: skewX(-20deg);
+      transition: left 0.6s ease;
+    }
+
+    .fancy-button:hover::before {
+      left: 125%;
+    }
+
+    .fancy-button:hover {
+      transform: translateY(-4px) scale(1.05);
+      box-shadow: 0 10px 30px var(--glow);
+    }
+
+    .fancy-button:active {
+      transform: scale(0.97);
+      box-shadow: 0 4px 12px var(--shadow);
+    }
+
+    .footer-text {
+      margin-top: 20px;
+      font-size: 14px;
+      color: var(--muted);
+      transition: color var(--dur) var(--ease);
+    }
+  </style>
+</head>
+<body>
+
+  <button class="theme-toggle" onclick="toggleTheme()">🌞 / 🌙</button>
+
+  <div class="button-container">
+    <button class="fancy-button" onclick="window.location.href='https://fll52777allan.github.io/accordian/DLPDropdownmenu2.html';">
+      Examples
+    </button>
+    <p class="footer-text">Click the button to visit the dropdown holding the examples.</p>
+  </div>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+      html.setAttribute('data-theme', newTheme);
+    }
+  </script>
+
+</body>
+</html>
