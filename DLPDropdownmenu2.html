@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Accordion — Styled + Album Slider (Stable Swipe)</title>
+<title>Accordion — Styled + Album Slider (Stable Swipe + Rect Edge Fade)</title>
 <style>
   :root{ --dur:560ms; --ease:cubic-bezier(.22,1.2,.32,1); --radius:16px; }
 
@@ -38,14 +38,24 @@
   }
   .theme-btn:hover{transform:translateY(-1px)}
 
-  /* Optional: dark-mode page edges fade to white */
-  html[data-theme="dark"] { background:#fff; }
-  html[data-theme="dark"] body{ background:transparent; position:relative; isolation:isolate; }
-  html[data-theme="dark"] body::before{
-    content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
-    background:radial-gradient(circle at 50% 40%,
-      #000 38%, #0b0b10 55%, #141822 70%,
-      rgba(0,0,0,.35) 82%, rgba(0,0,0,.18) 90%, rgba(0,0,0,0.08) 95%, rgba(0,0,0,0) 100%);
+  /* ===== Dark mode: small RECTANGULAR fade to white at page edges ===== */
+  html[data-theme="dark"] { background:#fff; }            /* white behind */
+  html[data-theme="dark"] body{
+    position:relative; isolation:isolate;
+  }
+  html[data-theme="dark"] body::after{
+    /* subtle rectangular vignette at edges */
+    --fade: 52px;                        /* edge width; tweak if you want */
+    content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      linear-gradient(to top,    rgba(255,255,255,.36), rgba(255,255,255,0) var(--fade)),
+      linear-gradient(to bottom, rgba(255,255,255,.36), rgba(255,255,255,0) var(--fade)),
+      linear-gradient(to left,   rgba(255,255,255,.36), rgba(255,255,255,0) var(--fade)),
+      linear-gradient(to right,  rgba(255,255,255,.36), rgba(255,255,255,0) var(--fade));
+    mix-blend-mode:lighten;
+  }
+  @media (min-width: 900px){
+    html[data-theme="dark"] body::after{ --fade: 68px; }
   }
 
   /* ACCORDION SHELL */
@@ -114,20 +124,19 @@
     opacity:0; transition:opacity .35s ease;
   }
   img.accordion-img.is-loaded{opacity:1;}
-  /* prevent ghost-drag */
   img{ user-select:none; -webkit-user-drag:none; }
 
-  /* ====== PHONE-STYLE ALBUM SLIDER (Section 2) ====== */
+  /* ===== PHONE-STYLE ALBUM SLIDER (Section 2) ===== */
   .carousel{ position:relative; padding:0 18px 12px; }
   .carousel .viewport{
     overflow:hidden; border-radius:14px;
-    touch-action: pan-y; /* allow vertical scroll; we handle horizontal swipes */
+    touch-action: pan-y; /* allow vertical page scroll */
   }
   .carousel .track{
     display:flex; will-change:transform;
     transition:transform .5s var(--ease);
   }
-  .carousel .slide{ flex:0 0 100%; padding:0; }
+  .carousel .slide{ flex:0 0 100%; }
   .carousel figure{ margin:0; }
   .carousel .gimg{
     display:block; width:100%; height:auto; border-radius:14px;
@@ -190,7 +199,7 @@
         </div></div>
       </div>
 
-      <!-- 2) Text Analysis Presentation — Phone-style album slider -->
+      <!-- 2) Text Analysis Presentation — Photo Album -->
       <div class="item">
         <input type="checkbox" id="acc-2" />
         <label class="summary" for="acc-2">
@@ -205,16 +214,33 @@
             </button>
             <div class="viewport" tabindex="0">
               <ul class="track">
-                <!-- Replace these 26 placeholders with your links -->
-                ${Array.from({length:26}, (_,i)=>`
-                <li class="slide">
-                  <figure>
-                    <img class="accordion-img ext-img gimg" loading="lazy"
-                         data-url="https://placehold.co/1200x700/png?text=Slide+${i+1}"
-                         alt="Slide ${i+1}">
-                    <figcaption>Slide ${i+1}</figcaption>
-                  </figure>
-                </li>`).join('')}
+                <!-- Replace these 26 placeholders with your direct links -->
+                <li class="slide"><figure><img class="accordion-img ext-img gimg" loading="lazy" data-url="https://placehold.co/1200x700/png?text=Slide+1"  alt="Slide 1"><figcaption>Slide 1</figcaption></figure></li>
+                <li class="slide"><figure><img class="accordion-img ext-img gimg" loading="lazy" data-url="https://placehold.co/1200x700/png?text=Slide+2"  alt="Slide 2"><figcaption>Slide 2</figcaption></figure></li>
+                <li class="slide"><figure><img class="accordion-img ext-img gimg" loading="lazy" data-url="https://placehold.co/1200x700/png?text=Slide+3"  alt="Slide 3"><figcaption>Slide 3</figcaption></figure></li>
+                <li class="slide"><figure><img class="accordion-img ext-img gimg" loading="lazy" data-url="https://placehold.co/1200x700/png?text=Slide+4"  alt="Slide 4"><figcaption>Slide 4</figcaption></figure></li>
+                <li class="slide"><figure><img class="accordion-img ext-img gimg" loading="lazy" data-url="https://placehold.co/1200x700/png?text=Slide+5"  alt="Slide 5"><figcaption>Slide 5</figcaption></figure></li>
+                <li class="slide"><figure><img class="accordion-img ext-img gimg" loading="lazy" data-url="https://placehold.co/1200x700/png?text=Slide+6"  alt="Slide 6"><figcaption>Slide 6</figcaption></figure></li>
+                <li class="slide"><figure><img class="accordion-img ext-img gimg" loading="lazy" data-url="https://placehold.co/1200x700/png?text=Slide+7"  alt="Slide 7"><figcaption>Slide 7</figcaption></figure></li>
+                <li class="slide"><figure><img class="accordion-img ext-img gimg" loading="lazy" data-url="https://placehold.co/1200x700/png?text=Slide+8"  alt="Slide 8"><figcaption>Slide 8</figcaption></figure></li>
+                <li class="slide"><figure><img class="accordion-img ext-img gimg" loading="lazy" data-url="https://placehold.co/1200x700/png?text=Slide+9"  alt="Slide 9"><figcaption>Slide 9</figcaption></figure></li>
+                <li class="slide"><figure><img class="accordion-img ext-img gimg" loading="lazy" data-url="https://placehold.co/1200x700/png?text=Slide+10" alt="Slide 10"><figcaption>Slide 10</figcaption></figure></li>
+                <li class="slide"><figure><img class="accordion-img ext-img gimg" loading="lazy" data-url="https://placehold.co/1200x700/png?text=Slide+11" alt="Slide 11"><figcaption>Slide 11</figcaption></figure></li>
+                <li class="slide"><figure><img class="accordion-img ext-img gimg" loading="lazy" data-url="https://placehold.co/1200x700/png?text=Slide+12" alt="Slide 12"><figcaption>Slide 12</figcaption></figure></li>
+                <li class="slide"><figure><img class="accordion-img ext-img gimg" loading="lazy" data-url="https://placehold.co/1200x700/png?text=Slide+13" alt="Slide 13"><figcaption>Slide 13</figcaption></figure></li>
+                <li class="slide"><figure><img class="accordion-img ext-img gimg" loading="lazy" data-url="https://placehold.co/1200x700/png?text=Slide+14" alt="Slide 14"><figcaption>Slide 14</figcaption></figure></li>
+                <li class="slide"><figure><img class="accordion-img ext-img gimg" loading="lazy" data-url="https://placehold.co/1200x700/png?text=Slide+15" alt="Slide 15"><figcaption>Slide 15</figcaption></figure></li>
+                <li class="slide"><figure><img class="accordion-img ext-img gimg" loading="lazy" data-url="https://placehold.co/1200x700/png?text=Slide+16" alt="Slide 16"><figcaption>Slide 16</figcaption></figure></li>
+                <li class="slide"><figure><img class="accordion-img ext-img gimg" loading="lazy" data-url="https://placehold.co/1200x700/png?text=Slide+17" alt="Slide 17"><figcaption>Slide 17</figcaption></figure></li>
+                <li class="slide"><figure><img class="accordion-img ext-img gimg" loading="lazy" data-url="https://placehold.co/1200x700/png?text=Slide+18" alt="Slide 18"><figcaption>Slide 18</figcaption></figure></li>
+                <li class="slide"><figure><img class="accordion-img ext-img gimg" loading="lazy" data-url="https://placehold.co/1200x700/png?text=Slide+19" alt="Slide 19"><figcaption>Slide 19</figcaption></figure></li>
+                <li class="slide"><figure><img class="accordion-img ext-img gimg" loading="lazy" data-url="https://placehold.co/1200x700/png?text=Slide+20" alt="Slide 20"><figcaption>Slide 20</figcaption></figure></li>
+                <li class="slide"><figure><img class="accordion-img ext-img gimg" loading="lazy" data-url="https://placehold.co/1200x700/png?text=Slide+21" alt="Slide 21"><figcaption>Slide 21</figcaption></figure></li>
+                <li class="slide"><figure><img class="accordion-img ext-img gimg" loading="lazy" data-url="https://placehold.co/1200x700/png?text=Slide+22" alt="Slide 22"><figcaption>Slide 22</figcaption></figure></li>
+                <li class="slide"><figure><img class="accordion-img ext-img gimg" loading="lazy" data-url="https://placehold.co/1200x700/png?text=Slide+23" alt="Slide 23"><figcaption>Slide 23</figcaption></figure></li>
+                <li class="slide"><figure><img class="accordion-img ext-img gimg" loading="lazy" data-url="https://placehold.co/1200x700/png?text=Slide+24" alt="Slide 24"><figcaption>Slide 24</figcaption></figure></li>
+                <li class="slide"><figure><img class="accordion-img ext-img gimg" loading="lazy" data-url="https://placehold.co/1200x700/png?text=Slide+25" alt="Slide 25"><figcaption>Slide 25</figcaption></figure></li>
+                <li class="slide"><figure><img class="accordion-img ext-img gimg" loading="lazy" data-url="https://placehold.co/1200x700/png?text=Slide+26" alt="Slide 26"><figcaption>Slide 26</figcaption></figure></li>
               </ul>
             </div>
             <button class="nav next" aria-label="Next slide">
@@ -297,7 +323,7 @@
       const next = car.querySelector('.next');
       const dotsWrap = car.querySelector('.dots');
 
-      // build dots
+      // dots
       slides.forEach((_,i)=>{
         const d=document.createElement('span');
         d.className='dot'+(i===0?' is-active':'');
@@ -308,19 +334,24 @@
 
       let index = 0;
       let dragging = false;
-      let pointerId = null;
+      let pid = null;
       let startX = 0;
       let lastX = 0;
       let lastT = 0;
+      let velocityX = 0;   // px/ms rolling estimate
       let dx = 0;
 
       function setTransition(on){
         track.style.transition = on ? 'transform .5s var(--ease)' : 'none';
       }
 
+      function applyTransform(pct){
+        track.style.transform = `translateX(${pct}%)`;
+      }
+
       function updateUI(){
         setTransition(true);
-        track.style.transform = `translateX(-${index*100}%)`;
+        applyTransform(-index*100);
         dots.forEach((d,i)=>d.classList.toggle('is-active', i===index));
         prev.toggleAttribute('disabled', index===0);
         next.toggleAttribute('disabled', index===slides.length-1);
@@ -328,83 +359,85 @@
 
       function goTo(i){
         const clamped = Math.max(0, Math.min(slides.length-1, i));
-        if(clamped===index) return snapBack();
+        if(clamped===index){ snapBack(); return; }
         index = clamped;
-        // preload neighbors
         loadSlideImgs(slides, [index-1, index, index+1]);
         updateUI();
       }
 
       function snapBack(){
         setTransition(true);
-        track.style.transform = `translateX(-${index*100}%)`;
+        applyTransform(-index*100);
       }
 
       prev.addEventListener('click', ()=> goTo(index-1));
       next.addEventListener('click', ()=> goTo(index+1));
 
-      // init images
+      // init images + UI
       loadSlideImgs(slides, [0,1]);
       updateUI();
 
-      // keyboard
+      // keyboard arrows
       function onKey(e){
         if(e.key==='ArrowLeft'){ e.preventDefault(); goTo(index-1); }
         if(e.key==='ArrowRight'){ e.preventDefault(); goTo(index+1); }
       }
       car.addEventListener('keydown', onKey);
-      car.querySelector('.viewport').setAttribute('tabindex','0');
+      viewport.setAttribute('tabindex','0');
 
       // pointer swipe
       viewport.addEventListener('pointerdown', e=>{
-        // only start if no button or primary touch
         if(e.button!==0 && e.pointerType!=='touch') return;
         dragging = true;
-        pointerId = e.pointerId;
-        viewport.setPointerCapture(pointerId);
+        pid = e.pointerId;
+        viewport.setPointerCapture(pid);
         setTransition(false);
         startX = lastX = e.clientX;
         lastT = performance.now();
+        velocityX = 0;
         dx = 0;
       });
 
       viewport.addEventListener('pointermove', e=>{
-        if(!dragging || e.pointerId!==pointerId) return;
+        if(!dragging || e.pointerId!==pid) return;
         const now = performance.now();
         const curX = e.clientX;
         const vw = viewport.clientWidth;
+
+        // live delta
         const rawDx = curX - startX;
 
-        // clamp live drag to +/-35% of viewport
-        const maxDrag = vw * 0.35;
-        dx = Math.max(-maxDrag, Math.min(maxDrag, rawDx));
+        // clamp drag to +/-35% of viewport width
+        const maxDragPx = vw * 0.35;
+        dx = Math.max(-maxDragPx, Math.min(maxDragPx, rawDx));
 
-        // convert px dx to percentage so it matches slide width
-        const pct = (dx / vw) * 100;
-        track.style.transform = `translateX(calc(-${index*100}% + ${pct}%))`;
+        // convert to percent of slide width
+        const pctOffset = (dx / vw) * 100;
+        applyTransform(-(index*100) + pctOffset);
+
+        // rolling velocity estimate (last segment)
+        const segDx = curX - lastX;
+        const segDt = Math.max(1, now - lastT);
+        velocityX = segDx / segDt; // px/ms
 
         lastX = curX;
         lastT = now;
       });
 
       function endDrag(e){
-        if(!dragging || (pointerId!==null && e.pointerId!==pointerId)) return;
+        if(!dragging || (pid!==null && e.pointerId!==pid)) return;
         dragging = false;
-        try{ viewport.releasePointerCapture(pointerId); }catch(_){}
-        pointerId = null;
+        try{ viewport.releasePointerCapture(pid); }catch(_){}
+        pid = null;
 
         const vw = viewport.clientWidth;
-
-        // distance + velocity thresholds
-        const distRatio = dx / vw;           // -0.35..0.35
-        const dt = Math.max(1, performance.now()-lastT);
-        const vx = (lastX - (startX+dx-dx)) / dt; // rough velocity px/ms (safe)
-        const fast = Math.abs(vx) > 0.5;     // ~> 500 px/s
-        const far  = Math.abs(distRatio) > 0.18;
+        const distRatio = dx / vw;               // -0.35..0.35
+        const fast = Math.abs(velocityX) > 0.5;  // > ~500px/s
+        const far  = Math.abs(distRatio) > 0.18; // swiped far enough
 
         if( (far || fast) ){
-          if(distRatio < 0) goTo(index+1);   // swiped left -> next
-          else goTo(index-1);                // swiped right -> prev
+          if(distRatio < 0) goTo(index+1);  // left -> next
+          else goTo(index-1);               // right -> prev
         }else{
           snapBack();
         }
@@ -414,12 +447,8 @@
       viewport.addEventListener('pointercancel', endDrag);
       viewport.addEventListener('pointerleave', e=>{ if(dragging) endDrag(e); });
 
-      // prevent image dragging cursor/ghost
-      slides.forEach(s=>{
-        s.querySelectorAll('img').forEach(img=>{
-          img.setAttribute('draggable','false');
-        });
-      });
+      // prevent image dragging/ghosts
+      slides.forEach(s=> s.querySelectorAll('img').forEach(img=> img.setAttribute('draggable','false')));
     });
   })();
   </script>
