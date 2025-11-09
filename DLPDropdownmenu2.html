@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Accordion — Styled + Album Slider (Stable Swipe + Rect Edge Fade)</title>
+<title>Accordion — Styled + Album Slider (No Offset + Side Edge Fade)</title>
 <style>
   :root{ --dur:560ms; --ease:cubic-bezier(.22,1.2,.32,1); --radius:16px; }
 
@@ -38,44 +38,35 @@
   }
   .theme-btn:hover{transform:translateY(-1px)}
 
-  /* ===== Dark mode: small RECTANGULAR fade to white at page edges ===== */
-  html[data-theme="dark"] { background:#fff; }            /* white behind */
+  /* ===== Dark mode: LEFT/RIGHT white edge fade only (no top/bottom) ===== */
+  html[data-theme="dark"] { background:#fff; }
   html[data-theme="dark"] body{
     position:relative; isolation:isolate;
   }
   html[data-theme="dark"] body::after{
-    /* subtle rectangular vignette at edges */
-    --fade: 52px;                        /* edge width; tweak if you want */
-    content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    --fade: 56px; /* width of side fade; adjust if you like */
+    content:""; position:fixed; inset:0; z-index:0; pointer-events:none;
     background:
-      linear-gradient(to top,    rgba(255,255,255,.36), rgba(255,255,255,0) var(--fade)),
-      linear-gradient(to bottom, rgba(255,255,255,.36), rgba(255,255,255,0) var(--fade)),
-      linear-gradient(to left,   rgba(255,255,255,.36), rgba(255,255,255,0) var(--fade)),
-      linear-gradient(to right,  rgba(255,255,255,.36), rgba(255,255,255,0) var(--fade));
+      linear-gradient(to left,  rgba(255,255,255,.36), rgba(255,255,255,0) var(--fade)),
+      linear-gradient(to right, rgba(255,255,255,.36), rgba(255,255,255,0) var(--fade));
     mix-blend-mode:lighten;
   }
-  @media (min-width: 900px){
-    html[data-theme="dark"] body::after{ --fade: 68px; }
-  }
+  @media (min-width:900px){ html[data-theme="dark"] body::after{ --fade:72px; } }
 
   /* ACCORDION SHELL */
   .accordion{
     position:relative; border-radius:20px; padding:24px 0;
     background:linear-gradient(180deg,#111 0%,#0c0c0c 100%);
   }
-  /* Dark mode edge glow (kept) */
   html[data-theme="dark"] .accordion{ isolation:isolate; overflow:hidden; }
   html[data-theme="dark"] .accordion::after{
     content:""; position:absolute; inset:0; border-radius:22px; pointer-events:none; z-index:1;
     background:radial-gradient(circle at center,
-      rgba(0,0,0,0) 60%,
-      rgba(255,255,255,0.05) 75%,
-      rgba(255,255,255,0.15) 85%,
-      rgba(255,255,255,0.25) 92%,
+      rgba(0,0,0,0) 60%, rgba(255,255,255,0.05) 75%,
+      rgba(255,255,255,0.15) 85%, rgba(255,255,255,0.25) 92%,
       rgba(255,255,255,0.45) 100%);
     mix-blend-mode:lighten;
   }
-  /* Light mode softened */
   html[data-theme="light"] .accordion{
     background:linear-gradient(180deg,#f5f5f5 0%, #ececec 50%, #e2e2e2 100%);
     isolation:isolate; overflow:hidden;
@@ -111,7 +102,7 @@
   .panel-inner>*{
     opacity:0; transform:translateY(-6px) scale(.985);
     transition:opacity calc(var(--dur)*.8) var(--ease), transform calc(var(--dur)*.8) var(--ease);
-    color:var(--muted); line-height:1.6; padding:0 18px;
+    color:var(--muted); line-height:1.6; padding:0 18px;  /* default inner padding */
   }
   .item>input:checked ~ .panel{grid-template-rows:1fr}
   .item>input:checked ~ .summary .chev{transform:rotate(90deg); color:var(--accent)}
@@ -127,7 +118,10 @@
   img{ user-select:none; -webkit-user-drag:none; }
 
   /* ===== PHONE-STYLE ALBUM SLIDER (Section 2) ===== */
-  .carousel{ position:relative; padding:0 18px 12px; }
+  /* kill the default 18px padding on the carousel specifically → removes pre-gap */
+  .panel-inner > .carousel{ padding:0 !important; }
+  .carousel{ position:relative; margin:0 18px 12px; } /* keep a little outer margin, not inner padding */
+
   .carousel .viewport{
     overflow:hidden; border-radius:14px;
     touch-action: pan-y; /* allow vertical page scroll */
@@ -285,7 +279,7 @@
     })();
   </script>
 
-  <!-- Image direct-link fixer (PostImages/Drive/Dropbox) + fade-in -->
+  <!-- Image direct-link fixer (PostImages/Drive/Dropbox) + fade-in + stable swipe -->
   <script>
   (function(){
     function toDirect(u){
@@ -338,17 +332,13 @@
       let startX = 0;
       let lastX = 0;
       let lastT = 0;
-      let velocityX = 0;   // px/ms rolling estimate
+      let velocityX = 0;   // px/ms
       let dx = 0;
 
       function setTransition(on){
         track.style.transition = on ? 'transform .5s var(--ease)' : 'none';
       }
-
-      function applyTransform(pct){
-        track.style.transform = `translateX(${pct}%)`;
-      }
-
+      function applyTransform(pct){ track.style.transform = `translateX(${pct}%)`; }
       function updateUI(){
         setTransition(true);
         applyTransform(-index*100);
@@ -356,7 +346,6 @@
         prev.toggleAttribute('disabled', index===0);
         next.toggleAttribute('disabled', index===slides.length-1);
       }
-
       function goTo(i){
         const clamped = Math.max(0, Math.min(slides.length-1, i));
         if(clamped===index){ snapBack(); return; }
@@ -364,38 +353,30 @@
         loadSlideImgs(slides, [index-1, index, index+1]);
         updateUI();
       }
-
-      function snapBack(){
-        setTransition(true);
-        applyTransform(-index*100);
-      }
+      function snapBack(){ setTransition(true); applyTransform(-index*100); }
 
       prev.addEventListener('click', ()=> goTo(index-1));
       next.addEventListener('click', ()=> goTo(index+1));
 
-      // init images + UI
+      // init
       loadSlideImgs(slides, [0,1]);
       updateUI();
 
-      // keyboard arrows
-      function onKey(e){
+      // keyboard
+      car.addEventListener('keydown', e=>{
         if(e.key==='ArrowLeft'){ e.preventDefault(); goTo(index-1); }
         if(e.key==='ArrowRight'){ e.preventDefault(); goTo(index+1); }
-      }
-      car.addEventListener('keydown', onKey);
+      });
       viewport.setAttribute('tabindex','0');
 
       // pointer swipe
       viewport.addEventListener('pointerdown', e=>{
         if(e.button!==0 && e.pointerType!=='touch') return;
-        dragging = true;
-        pid = e.pointerId;
+        dragging = true; pid = e.pointerId;
         viewport.setPointerCapture(pid);
         setTransition(false);
-        startX = lastX = e.clientX;
-        lastT = performance.now();
-        velocityX = 0;
-        dx = 0;
+        startX = lastX = e.clientX; lastT = performance.now();
+        velocityX = 0; dx = 0;
       });
 
       viewport.addEventListener('pointermove', e=>{
@@ -404,50 +385,41 @@
         const curX = e.clientX;
         const vw = viewport.clientWidth;
 
-        // live delta
+        // drag, clamped
         const rawDx = curX - startX;
-
-        // clamp drag to +/-35% of viewport width
         const maxDragPx = vw * 0.35;
         dx = Math.max(-maxDragPx, Math.min(maxDragPx, rawDx));
-
-        // convert to percent of slide width
         const pctOffset = (dx / vw) * 100;
         applyTransform(-(index*100) + pctOffset);
 
-        // rolling velocity estimate (last segment)
+        // velocity
         const segDx = curX - lastX;
         const segDt = Math.max(1, now - lastT);
         velocityX = segDx / segDt; // px/ms
-
-        lastX = curX;
-        lastT = now;
+        lastX = curX; lastT = now;
       });
 
       function endDrag(e){
         if(!dragging || (pid!==null && e.pointerId!==pid)) return;
-        dragging = false;
-        try{ viewport.releasePointerCapture(pid); }catch(_){}
+        dragging = false; try{ viewport.releasePointerCapture(pid);}catch(_){}
         pid = null;
 
         const vw = viewport.clientWidth;
-        const distRatio = dx / vw;               // -0.35..0.35
-        const fast = Math.abs(velocityX) > 0.5;  // > ~500px/s
-        const far  = Math.abs(distRatio) > 0.18; // swiped far enough
+        const distRatio = dx / vw;
+        const fast = Math.abs(velocityX) > 0.5;  // ~500 px/s
+        const far  = Math.abs(distRatio) > 0.18;
 
-        if( (far || fast) ){
-          if(distRatio < 0) goTo(index+1);  // left -> next
-          else goTo(index-1);               // right -> prev
+        if(far || fast){
+          if(distRatio < 0) goTo(index+1); else goTo(index-1);
         }else{
           snapBack();
         }
       }
-
       viewport.addEventListener('pointerup', endDrag);
       viewport.addEventListener('pointercancel', endDrag);
       viewport.addEventListener('pointerleave', e=>{ if(dragging) endDrag(e); });
 
-      // prevent image dragging/ghosts
+      // no ghost dragging
       slides.forEach(s=> s.querySelectorAll('img').forEach(img=> img.setAttribute('draggable','false')));
     });
   })();
