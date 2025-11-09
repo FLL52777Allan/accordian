@@ -33,21 +33,42 @@
   img{user-select:none;-webkit-user-drag:none}
   figure{margin:0}
 
-  /* THEME TOGGLE */
-  .theme-switch{display:flex;justify-content:flex-end;margin:12px 0}
+  /* ---------- TOP BAR (Back left, Theme right) ---------- */
+  .topbar{
+    position:sticky; top:0; z-index:50;
+    display:flex; justify-content:space-between; align-items:center;
+    padding:12px 16px;
+    backdrop-filter:saturate(1.2) blur(6px);
+    background:linear-gradient(to bottom, color-mix(in oklab, var(--bg) 85%, transparent), transparent);
+  }
+
+  /* Back button */
+  .back-btn{
+    display:inline-grid; grid-auto-flow:column; align-items:center; gap:8px;
+    background:var(--panel); color:var(--text); border:1px solid var(--border);
+    padding:8px 12px; border-radius:999px; cursor:pointer; user-select:none;
+    box-shadow:var(--shadow);
+    font-weight:600; font-size:13px; letter-spacing:.2px;
+    transition:transform .15s ease, background-color .25s ease, color .25s ease, border-color .25s ease;
+  }
+  .back-btn svg{width:16px; height:16px}
+  .back-btn:hover{ transform:translateY(-1px); }
+  .back-btn:active{ transform:translateY(0); }
+
+  /* Theme toggle */
   .theme-btn{
     background:var(--panel); color:var(--text); border:1px solid var(--border);
-    padding:10px 14px; border-radius:999px; cursor:pointer; user-select:none;
+    padding:8px 12px; border-radius:999px; cursor:pointer; user-select:none;
     box-shadow:var(--shadow);
-    transition:transform .15s ease, background-color .25s ease, color .25s ease;
+    font-weight:600; font-size:13px; letter-spacing:.2px;
+    transition:transform .15s ease, background-color .25s ease, color .25s ease, border-color .25s ease;
   }
-  .theme-btn:hover{transform:translateY(-1px)}
+  .theme-btn:hover{ transform:translateY(-1px); }
 
-  /* ============ ACCORDION HOUSING (matches the screenshot vibe) ============ */
+  /* ============ ACCORDION HOUSING ============ */
   .accordion{
     position:relative; border-radius:22px; padding:24px 14px; overflow:hidden; isolation:isolate;
   }
-  /* Dark: deep glossy housing + edge glow */
   html[data-theme="dark"] .accordion{
     background:
       radial-gradient(140% 100% at 0% 0%, rgba(255,255,255,0.08), rgba(255,255,255,0) 40%) ,
@@ -57,7 +78,6 @@
       inset 0 1px 0 rgba(255,255,255,0.06),
       0 28px 80px rgba(0,0,0,0.55);
   }
-  /* Light: same form but white → very light gray */
   html[data-theme="light"] .accordion{
     background:
       radial-gradient(140% 100% at 0% 0%, rgba(0,0,0,0.06), rgba(0,0,0,0) 40%) ,
@@ -67,30 +87,20 @@
       inset 0 1px 0 rgba(255,255,255,0.55),
       0 26px 60px rgba(0,0,0,0.12);
   }
-  .accordion::after{content:none !important;} /* kill any old halo overlay */
+  .accordion::after{content:none !important;}
 
   /* ================== ITEMS / BARS ================== */
   .item{
     border-radius:16px; margin:12px 8px; border:1px solid var(--border); box-shadow:var(--shadow);
-    transition:transform .18s ease, box-shadow .18s ease;   /* ↑ nudge + lift */
+    transition:transform .18s ease, box-shadow .18s ease;
     will-change:transform;
   }
-  /* Upward nudge hover + stronger lift */
-  .item:hover{
-    transform:translateY(-4px);
-    box-shadow:0 14px 28px rgba(0,0,0,.18);
-  }
-  /* Keep it lifted when open/focused (nice feel on keyboard too) */
+  .item:hover{ transform:translateY(-4px); box-shadow:0 14px 28px rgba(0,0,0,.18); }
   .item:has(> input:checked),
-  .item:focus-within{
-    transform:translateY(-2px);
-    box-shadow:0 12px 24px rgba(0,0,0,.16);
-  }
+  .item:focus-within{ transform:translateY(-2px); box-shadow:0 12px 24px rgba(0,0,0,.16); }
   @media (prefers-reduced-motion:reduce){
     .item, .item:hover, .item:has(> input:checked){ transition:none; transform:none; }
   }
-
-  /* Card fills per theme */
   html[data-theme="dark"] .item{ background:linear-gradient(180deg, #151a25 0%, #121722 100%); }
   html[data-theme="light"] .item{
     background:linear-gradient(180deg, #ffffff 0%, #f6f8fb 100%);
@@ -103,7 +113,6 @@
     padding:16px 18px; font-weight:600; cursor:pointer; user-select:none;
     border-top-left-radius:16px; border-top-right-radius:16px; position:relative;
   }
-  /* Light headers = pure white + glossy right sweep */
   html[data-theme="light"] .summary{
     background:#ffffff; border-bottom:1px solid rgba(0,0,0,.06);
   }
@@ -112,7 +121,6 @@
     background:linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.52) 70%, rgba(255,255,255,0.9) 100%);
     opacity:.45;
   }
-  /* Dark headers = subtle gradient + soft light sweep */
   html[data-theme="dark"] .summary{
     background:linear-gradient(180deg, #1b2130 0%, #151b28 100%); border-bottom:1px solid var(--border);
   }
@@ -121,7 +129,7 @@
     background:linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.22) 68%, rgba(255,255,255,0.38) 100%);
     opacity:.35;
   }
-  .summary > *{ position:relative; z-index:1; } /* text above the sheen */
+  .summary > *{ position:relative; z-index:1; }
   .summary:focus-visible{outline:none; box-shadow:0 0 0 3px var(--ring); border-radius:10px}
   .chev{font-size:14px; color:var(--muted); transition:transform .45s var(--ease), color .22s ease}
   .chev::before{content:"▶"}
@@ -160,7 +168,6 @@
   .carousel .gimg{display:block; width:100%; height:auto; border-radius:14px; background:var(--img-frame); border:1px solid var(--border)}
   .carousel figcaption{color:var(--muted); font-size:12px; margin:6px 2px 0;}
 
-  /* Nav buttons + dots */
   .carousel .nav{
     position:absolute; top:50%; transform:translateY(-50%);
     background:rgba(0,0,0,.35); color:#fff; border:1px solid rgba(255,255,255,.25);
@@ -181,7 +188,15 @@
 </head>
 <body>
 
-  <div class="theme-switch">
+  <!-- TOP BAR -->
+  <div class="topbar" role="navigation" aria-label="Page controls">
+    <button class="back-btn" id="goBack" type="button" aria-label="Go back">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M15.5 19a1 1 0 0 1-.7-.29l-6-6a1 1 0 0 1 0-1.42l6-6A1 1 0 0 1 16.5 6l-5.3 5.29L16.5 16a1 1 0 0 1-1 1z"/>
+      </svg>
+      <span>Back</span>
+    </button>
+
     <button class="theme-btn" id="toggleTheme" type="button">🌗 Light / Dark</button>
   </div>
 
@@ -276,9 +291,10 @@
     </section>
   </main>
 
-  <!-- Theme toggle -->
+  <!-- Theme + Back logic -->
   <script>
     (function(){
+      /* ---------- Theme remember ---------- */
       const KEY='accordion-theme';
       const html=document.documentElement;
       try{
@@ -289,6 +305,23 @@
         const next=html.getAttribute('data-theme')==='dark'?'light':'dark';
         html.setAttribute('data-theme', next);
         try{ localStorage.setItem(KEY,next);}catch(e){}
+      });
+
+      /* ---------- Back button ---------- */
+      const FALLBACK_URL = 'https://fll52777allan.github.io/accordian/Buttontoopendropdownmenus.html';
+      document.getElementById('goBack')?.addEventListener('click',()=>{
+        try{
+          const ref = document.referrer;
+          if(ref){
+            const sameOrigin = new URL(ref, location.href).origin === location.origin;
+            if(sameOrigin){ history.back(); return; }
+          }
+        }catch(e){}
+        if(FALLBACK_URL){
+          location.href = FALLBACK_URL;
+        }else{
+          location.href = location.origin + location.pathname.replace(/[^/]+$/, '');
+        }
       });
     })();
   </script>
