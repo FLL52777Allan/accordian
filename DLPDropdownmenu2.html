@@ -3,9 +3,13 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Examples</title>
+<title>Examples (failsafe fade)</title>
 <style>
-  :root{ --dur:560ms; --ease:cubic-bezier(.22,1.2,.32,1); --radius:16px; }
+  :root{
+    --dur:560ms; --ease:cubic-bezier(.22,1.2,.32,1); --radius:16px;
+    --solid-light:#f4f5f8; /* used by overlay so we never show white */
+    --solid-dark:#0b0b10;
+  }
 
   /* THEME TOKENS */
   html[data-theme="dark"]{
@@ -13,38 +17,46 @@
     --accent:#6aa6ff; --ring:#8ec1ff; --img-frame:#0e0e16; --border:rgba(255,255,255,.14);
     --shadow:0 6px 24px rgba(0,0,0,.28);
     --accent1:#6aa6ff; --accent2:#8ec1ff; --glow:rgba(106,166,255,.6);
+    --bg-solid:var(--solid-dark);
+
+    --sun-left:70%; --moon-left:30%; --sun-scale:.9; --moon-scale:1; --sun-opacity:.7; --moon-opacity:1;
   }
   html[data-theme="light"]{
     --bg:#f4f5f8; --bg-accent:#ffffff; --panel:#ffffff; --text:#0e1320; --muted:#555b67;
     --accent:#2f6bff; --ring:#8bb0ff; --img-frame:#e9ebf0; --border:rgba(0,0,0,.10);
     --shadow:0 2px 14px rgba(0,0,0,.06);
     --accent1:#6aa6ff; --accent2:#8ec1ff; --glow:rgba(47,107,255,.45);
+    --bg-solid:var(--solid-light);
+
+    --sun-left:30%; --moon-left:70%; --sun-scale:1; --moon-scale:.9; --sun-opacity:1; --moon-opacity:.7;
   }
 
-  /* PAGE */
-  html,body{height:100%;margin:0;background:var(--bg);}
+  /* PAGE (set solid bg everywhere to avoid any runner/iframe flash) */
+  html,body{height:100%;margin:0;background-color:var(--bg-solid);}
   body{
     font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial,"Noto Sans";
     color:var(--text);
     transition:background-color .25s ease,color .25s ease;
-    background:radial-gradient(1000px 520px at 20% -10%, var(--bg-accent) 0%, var(--bg) 60%);
+    background: radial-gradient(1000px 520px at 20% -10%, var(--bg-accent) 0%, var(--bg) 60%);
     min-height:100dvh;
   }
+  main, .accordion { background-color: transparent; }
   .wrap{max-width:720px;margin:clamp(24px,6vw,64px) auto;padding:0 16px;}
   h1{margin:0 0 12px} .lead{color:var(--muted);margin:0 0 24px}
   img{user-select:none;-webkit-user-drag:none}
   figure{margin:0}
+  .sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 
-  /* ---------- TOP BAR (Back left, Theme right) ---------- */
+  /* ---------- TOP BAR ---------- */
   .topbar{
     position:sticky; top:0; z-index:50;
     display:flex; justify-content:space-between; align-items:center;
     padding:12px 16px;
-    backdrop-filter:saturate(1.2) blur(6px);
-    background:linear-gradient(to bottom, color-mix(in oklab, var(--bg) 85%, transparent), transparent);
+    background:linear-gradient(to bottom, rgba(0,0,0,.06), rgba(0,0,0,0));
+    backdrop-filter:saturate(1.1) blur(6px);
   }
 
-  /* Back button — MATCHES your original fancy gradient style */
+  /* Back button — gradient/glow */
   .back-btn{
     display:inline-grid; grid-auto-flow:column; align-items:center; gap:10px;
     background:linear-gradient(90deg, var(--accent1), var(--accent2));
@@ -60,61 +72,101 @@
     transition:left .6s ease;
   }
   .back-btn:hover::before{ left:125%; }
-  .back-btn:hover{
-    transform:translateY(-3px) scale(1.03);
-    box-shadow:0 10px 30px var(--glow);
-  }
+  .back-btn:hover{ transform:translateY(-3px) scale(1.03); box-shadow:0 10px 30px var(--glow); }
   .back-btn:active{ transform:scale(.98); box-shadow:0 4px 12px var(--shadow); }
   .back-btn svg{ width:16px; height:16px; fill:currentColor; }
 
-  /* Theme toggle (kept minimal) */
+  /* Theme toggle — same gradient/glow + sliding Sun/Moon */
   .theme-btn{
-    background:var(--panel); color:var(--text); border:1px solid var(--border);
-    padding:8px 12px; border-radius:999px; cursor:pointer; user-select:none;
-    box-shadow:var(--shadow);
-    font-weight:600; font-size:13px; letter-spacing:.2px;
-    transition:transform .15s ease, background-color .25s ease, color .25s ease, border-color .25s ease;
+    background:linear-gradient(90deg, var(--accent1), var(--accent2));
+    color:#fff; border:none; border-radius:40px; cursor:pointer; user-select:none;
+    padding:8px 14px; box-shadow:0 6px 20px var(--shadow);
+    transition:all .35s var(--ease); position:relative; overflow:hidden;
+    display:inline-flex; align-items:center; gap:10px; font-weight:600; letter-spacing:.3px;
   }
-  .theme-btn:hover{ transform:translateY(-1px); }
+  .theme-btn::before{
+    content:""; position:absolute; top:0; left:-75%; width:50%; height:100%;
+    background:rgba(255,255,255,.25); transform:skewX(-20deg);
+    transition:left .6s ease;
+  }
+  .theme-btn:hover::before{ left:125%; }
+  .theme-btn:hover{ transform:translateY(-2px) scale(1.02); box-shadow:0 10px 26px var(--glow); }
+  .theme-btn:active{ transform:scale(.98); box-shadow:0 4px 12px var(--shadow); }
 
-  /* ============ ACCORDION HOUSING ============ */
-  .accordion{
-    position:relative; border-radius:22px; padding:24px 14px; overflow:hidden; isolation:isolate;
+  .icon-track{
+    position:relative; width:68px; height:28px; border-radius:999px;
+    background:rgba(255,255,255,.18);
+    border:1px solid rgba(255,255,255,.25);
+    display:inline-block; margin-left:2px;
   }
+  .ico{
+    position:absolute; top:50%;
+    transform:translate(-50%,-50%) scale(1);
+    transition:left var(--dur) var(--ease), transform var(--dur) var(--ease), opacity .35s ease;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,.25));
+  }
+  .ico svg{ width:18px; height:18px; display:block; }
+  .ico.sun  { left: var(--sun-left);  opacity: var(--sun-opacity);  transform: translate(-50%,-50%) scale(var(--sun-scale)); }
+  .ico.moon { left: var(--moon-left); opacity: var(--moon-opacity); transform: translate(-50%,-50%) scale(var(--moon-scale)); }
+  .theme-btn.swap .ico.sun  { transform: translate(-50%,-50%) scale(var(--sun-scale))  rotate(18deg); }
+  .theme-btn.swap .ico.moon { transform: translate(-50%,-50%) scale(var(--moon-scale)) rotate(-18deg); }
+
+  @keyframes trail-pop {
+    0%   { opacity:.6; transform:translate(-50%,-50%) scaleX(1.8) scaleY(.9); }
+    60%  { opacity:.25; transform:translate(-50%,-50%) scaleX(1.1) scaleY(1.05); }
+    100% { opacity:0;  transform:translate(-50%,-50%) scaleX(1)    scaleY(1); }
+  }
+  .ico::after{
+    content:""; position:absolute; left:50%; top:50%;
+    width:26px; height:26px; border-radius:999px; pointer-events:none; opacity:0; filter: blur(8px);
+    transform:translate(-50%,-50%);
+  }
+  .theme-btn.swap .ico.sun::after{
+    background: radial-gradient(closest-side, rgba(255,215,90,.9), rgba(255,190,70,.0));
+    animation: trail-pop 380ms var(--ease) both;
+  }
+  .theme-btn.swap .ico.moon::after{
+    background: radial-gradient(closest-side, rgba(140,175,255,.9), rgba(140,175,255,.0));
+    animation: trail-pop 380ms var(--ease) both;
+  }
+
+  /* ===== Failsafe cross-fade overlay (no ripple, no white) ===== */
+  .theme-fade{
+    position:fixed; inset:0; z-index:9999; pointer-events:none;
+    background:var(--fade-bg, var(--bg-solid));
+    opacity:0;
+    transition: opacity var(--fade-dur, 480ms) ease;
+    will-change: opacity;
+  }
+  .theme-fade.in { opacity:1; }
+  .theme-fade.out{ opacity:0; }
+
+  /* ============ ACCORDION ============ */
+  .accordion{ position:relative; border-radius:22px; padding:24px 14px; overflow:hidden; isolation:isolate; }
   html[data-theme="dark"] .accordion{
     background:
-      radial-gradient(140% 100% at 0% 0%, rgba(255,255,255,0.08), rgba(255,255,255,0) 40%) ,
-      radial-gradient(140% 100% at 100% 100%, rgba(255,255,255,0.08), rgba(255,255,255,0) 40%) ,
+      radial-gradient(140% 100% at 0% 0%, rgba(255,255,255,0.08), rgba(255,255,255,0) 40%),
+      radial-gradient(140% 100% at 100% 100%, rgba(255,255,255,0.08), rgba(255,255,255,0) 40%),
       linear-gradient(180deg, #141824 0%, #0b0d14 100%);
-    box-shadow:
-      inset 0 1px 0 rgba(255,255,255,0.06),
-      0 28px 80px rgba(0,0,0,0.55);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 28px 80px rgba(0,0,0,0.55);
   }
   html[data-theme="light"] .accordion{
     background:
-      radial-gradient(140% 100% at 0% 0%, rgba(0,0,0,0.06), rgba(0,0,0,0) 40%) ,
-      radial-gradient(140% 100% at 100% 100%, rgba(0,0,0,0.06), rgba(0,0,0,0) 40%) ,
+      radial-gradient(140% 100% at 0% 0%, rgba(0,0,0,0.06), rgba(0,0,0,0) 40%),
+      radial-gradient(140% 100% at 100% 100%, rgba(0,0,0,0.06), rgba(0,0,0,0) 40%),
       linear-gradient(180deg,#ffffff 0%, #f5f7fa 100%);
-    box-shadow:
-      inset 0 1px 0 rgba(255,255,255,0.55),
-      0 26px 60px rgba(0,0,0,0.12);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.55), 0 26px 60px rgba(0,0,0,0.12);
   }
   .accordion::after{content:none !important;}
 
-  /* ================== ITEMS / BARS ================== */
-  .item{
-    border-radius:16px; margin:12px 8px; border:1px solid var(--border); box-shadow:var(--shadow);
-    transition:transform .18s ease, box-shadow .18s ease; will-change:transform;
-  }
+  .item{ border-radius:16px; margin:12px 8px; border:1px solid var(--border); box-shadow:var(--shadow);
+         transition:transform .18s ease, box-shadow .18s ease; will-change:transform; }
   .item:hover{ transform:translateY(-4px); box-shadow:0 14px 28px rgba(0,0,0,.18); }
   .item:has(> input:checked), .item:focus-within{ transform:translateY(-2px); box-shadow:0 12px 24px rgba(0,0,0,.16); }
-  @media (prefers-reduced-motion:reduce){
-    .item, .item:hover, .item:has(> input:checked){ transition:none; transform:none; }
-  }
+  @media (prefers-reduced-motion:reduce){ .item, .item:hover, .item:has(> input:checked){ transition:none; transform:none; } }
   html[data-theme="dark"] .item{ background:linear-gradient(180deg, #151a25 0%, #121722 100%); }
   html[data-theme="light"] .item{ background:linear-gradient(180deg, #ffffff 0%, #f6f8fb 100%); box-shadow:0 2px 10px rgba(0,0,0,0.06); }
 
-  /* HEADER (SUMMARY) */
   .summary{
     display:grid; grid-template-columns:1fr auto; align-items:center; gap:12px;
     padding:16px 18px; font-weight:600; cursor:pointer; user-select:none;
@@ -135,7 +187,6 @@
   .chev{font-size:14px; color:var(--muted); transition:transform .45s var(--ease), color .22s ease}
   .chev::before{content:"▶"}
 
-  /* PANEL ANIM */
   .panel{display:grid; grid-template-rows:0fr; transition:grid-template-rows var(--dur) var(--ease)}
   .panel>.panel-inner{overflow:hidden}
   .panel-inner>*{
@@ -148,14 +199,12 @@
   .item>input:checked ~ .summary .chev{transform:rotate(90deg); color:var(--accent)}
   .item>input:checked ~ .panel .panel-inner>*{opacity:1; transform:none; transition-delay:80ms}
 
-  /* IMAGES + FADE-IN */
   img.accordion-img{
     display:block; width:100%; height:auto; border-radius:12px; margin:12px 0 14px;
     background:var(--img-frame); border:1px solid var(--border); opacity:0; transition:opacity .35s ease;
   }
   img.accordion-img.is-loaded{opacity:1;}
 
-  /* ================== SCROLL-SNAP CAROUSEL ================== */
   .panel-inner > .carousel{padding:0!important; margin:0 0 12px;}
   .carousel{position:relative}
   .carousel .viewport{
@@ -198,7 +247,17 @@
       <span>Back</span>
     </button>
 
-    <button class="theme-btn" id="toggleTheme" type="button">🌗 Light / Dark</button>
+    <button class="theme-btn" id="toggleTheme" type="button" aria-label="Toggle theme">
+      <span class="sr">Toggle theme</span>
+      <span class="icon-track" aria-hidden="true">
+        <span class="ico sun">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.76 4.84 5.34 3.42 3.92 4.84l1.42 1.42 1.42-1.42zm10.48 0 1.42-1.42 1.42 1.42-1.42 1.42-1.42-1.42zM12 4V1h0v3zm0 19v-3h0v3zM4 12H1v0h3zm19 0h-3v0h3zM6.76 19.16l-1.42 1.42L3.92 19.16l1.42-1.42 1.42 1.42zm10.48 0 1.42 1.42 1.42-1.42-1.42-1.42-1.42 1.42zM12 7a5 5 0 1 0 .001 10.001A5 5 0 0 0 12 7z"/></svg>
+        </span>
+        <span class="ico moon">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </span>
+      </span>
+    </button>
   </div>
 
   <main class="wrap">
@@ -206,7 +265,6 @@
     <p class="lead">Evidence of learning</p>
 
     <section class="accordion">
-      <!-- 1) Poem -->
       <div class="item">
         <input type="checkbox" id="acc-1" />
         <label class="summary" for="acc-1">
@@ -215,13 +273,11 @@
         </label>
         <div class="panel"><div class="panel-inner">
           <img class="accordion-img ext-img" loading="lazy"
-               data-url="https://i.postimg.cc/mrJMwhSm/image.png"
-               alt="Poem">
+               data-url="https://i.postimg.cc/mrJMwhSm/image.png" alt="Poem">
           <p>Learning how to <em>anotate a text</em> was important so we can understand stories and be able to analyse them in depth.</p>
         </div></div>
       </div>
 
-      <!-- 2) Text Analysis Presentation - Image Carosel-->
       <div class="item">
         <input type="checkbox" id="acc-2" />
         <label class="summary" for="acc-2">
@@ -229,14 +285,12 @@
           <span class="chev" aria-hidden="true"></span>
         </label>
         <div class="panel"><div class="panel-inner">
-
           <div class="carousel" data-carousel id="gallery-1" aria-roledescription="carousel">
             <button class="nav prev" aria-label="Previous slide">
               <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M15.5 19a1 1 0 0 1-.7-.29l-6-6a1 1 0 0 1 0-1.42l6-6A1 1 0 0 1 16.5 6l-5.3 5.29L16.5 16a1 1 0 0 1-1 1z"/></svg>
             </button>
             <div class="viewport" tabindex="0">
               <ul class="track">
-                <!-- 26 slides -->
                 <li class="slide"><figure><img class="accordion-img ext-img gimg" loading="lazy" data-url="https://i.postimg.cc/sgHBHqV3/image.png" alt="Slide 1"><figcaption>Slide 1</figcaption></figure></li>
                 <li class="slide"><figure><img class="accordion-img ext-img gimg" loading="lazy" data-url="https://i.postimg.cc/wvXjzGd3/image.png" alt="Slide 2"><figcaption>Slide 2</figcaption></figure></li>
                 <li class="slide"><figure><img class="accordion-img ext-img gimg" loading="lazy" data-url="https://i.postimg.cc/43zgHH2F/image.png" alt="Slide 3"><figcaption>Slide 3</figcaption></figure></li>
@@ -275,7 +329,6 @@
         </div></div>
       </div>
 
-      <!-- 3) PPACCTSSO Practice Quiz -->
       <div class="item">
         <input type="checkbox" id="acc-3" />
         <label class="summary" for="acc-3">
@@ -284,31 +337,70 @@
         </label>
         <div class="panel"><div class="panel-inner">
           <img class="accordion-img ext-img" loading="lazy"
-               data-url="https://i.postimg.cc/mDfV8dLj/image.png"
-               alt="PPACCTSSO Practice Quiz">
+               data-url="https://i.postimg.cc/mDfV8dLj/image.png" alt="PPACCTSSO Practice Quiz">
           <p>The <em>PPACCTSSO Practice Quiz</em> helped me understand the PPACCTSSO elements better, which developed my knowledge.</p>
         </div></div>
       </div>
     </section>
   </main>
 
+  <!-- Failsafe overlay -->
+  <div class="theme-fade" id="themeFade"></div>
+
   <!-- Theme + Back logic -->
   <script>
     (function(){
-      /* ---------- Theme remember ---------- */
       const KEY='accordion-theme';
       const html=document.documentElement;
+      const themeBtn = document.getElementById('toggleTheme');
+      const fadeEl  = document.getElementById('themeFade');
+
+      /* restore theme early to avoid any flash */
       try{
         const saved=localStorage.getItem(KEY);
         if(saved==='light'||saved==='dark') html.setAttribute('data-theme', saved);
       }catch(e){}
-      document.getElementById('toggleTheme')?.addEventListener('click',()=>{
-        const next=html.getAttribute('data-theme')==='dark'?'light':'dark';
+
+      function swapPulse(){
+        themeBtn.classList.add('swap');
+        setTimeout(()=> themeBtn.classList.remove('swap'), 300);
+      }
+
+      function setFadeBgToNextTheme(){
+        const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        const solid = next === 'dark'
+          ? getComputedStyle(html).getPropertyValue('--solid-dark')
+          : getComputedStyle(html).getPropertyValue('--solid-light');
+        fadeEl.style.setProperty('--fade-bg', (solid || '').trim() || (next==='dark'?'#0b0b10':'#f4f5f8'));
+      }
+
+      function toggleThemeNow(){
+        const next = html.getAttribute('data-theme')==='dark' ? 'light' : 'dark';
         html.setAttribute('data-theme', next);
         try{ localStorage.setItem(KEY,next);}catch(e){}
+        swapPulse();
+      }
+
+      themeBtn?.addEventListener('click', ()=>{
+        // paint overlay FIRST to the next theme color (no white frame ever)
+        setFadeBgToNextTheme();
+
+        // fade in (cover), swap theme behind it, then fade out
+        fadeEl.classList.add('in');
+        fadeEl.classList.remove('out');
+
+        // give it a tiny tick to ensure paint in Edge/iframes
+        setTimeout(()=>{
+          toggleThemeNow();
+          // let it show the new theme color briefly, then fade away
+          setTimeout(()=>{
+            fadeEl.classList.add('out');
+            fadeEl.classList.remove('in');
+          }, 100); // show overlay ~100ms before fade out
+        }, 20); // ensure overlay has reached opacity pipeline
       });
 
-      /* ---------- Back button ---------- */
+      /* Back button */
       const FALLBACK_URL = 'https://fll52777allan.github.io/accordian/Buttontoopendropdownmenus.html';
       document.getElementById('goBack')?.addEventListener('click',()=>{
         try{
@@ -318,16 +410,12 @@
             if(sameOrigin){ history.back(); return; }
           }
         }catch(e){}
-        if(FALLBACK_URL){
-          location.href = FALLBACK_URL;
-        }else{
-          location.href = location.origin + location.pathname.replace(/[^/]+$/, '');
-        }
+        location.href = FALLBACK_URL || (location.origin + location.pathname.replace(/[^/]+$/, ''));
       });
     })();
   </script>
 
-  <!-- Image loader + Scroll-snap carousel -->
+  <!-- Image loader + Scroll-snap carousel (unchanged) -->
   <script>
   (function(){
     function toDirect(u){
