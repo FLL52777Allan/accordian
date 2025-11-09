@@ -12,11 +12,13 @@
     --bg:#0b0b10; --bg-accent:#141826; --panel:#161923; --text:#e8e8f0; --muted:#a5a7b4;
     --accent:#6aa6ff; --ring:#8ec1ff; --img-frame:#0e0e16; --border:rgba(255,255,255,.14);
     --shadow:0 6px 24px rgba(0,0,0,.28);
+    --accent1:#6aa6ff; --accent2:#8ec1ff; --glow:rgba(106,166,255,.6);
   }
   html[data-theme="light"]{
     --bg:#f4f5f8; --bg-accent:#ffffff; --panel:#ffffff; --text:#0e1320; --muted:#555b67;
     --accent:#2f6bff; --ring:#8bb0ff; --img-frame:#e9ebf0; --border:rgba(0,0,0,.10);
     --shadow:0 2px 14px rgba(0,0,0,.06);
+    --accent1:#6aa6ff; --accent2:#8ec1ff; --glow:rgba(47,107,255,.45);
   }
 
   /* PAGE */
@@ -42,20 +44,30 @@
     background:linear-gradient(to bottom, color-mix(in oklab, var(--bg) 85%, transparent), transparent);
   }
 
-  /* Back button */
+  /* Back button — MATCHES your original fancy gradient style */
   .back-btn{
-    display:inline-grid; grid-auto-flow:column; align-items:center; gap:8px;
-    background:var(--panel); color:var(--text); border:1px solid var(--border);
-    padding:8px 12px; border-radius:999px; cursor:pointer; user-select:none;
-    box-shadow:var(--shadow);
-    font-weight:600; font-size:13px; letter-spacing:.2px;
-    transition:transform .15s ease, background-color .25s ease, color .25s ease, border-color .25s ease;
+    display:inline-grid; grid-auto-flow:column; align-items:center; gap:10px;
+    background:linear-gradient(90deg, var(--accent1), var(--accent2));
+    color:#fff; border:none; border-radius:40px; cursor:pointer; user-select:none;
+    padding:12px 22px; font-weight:600; font-size:14px; letter-spacing:.3px;
+    box-shadow:0 6px 20px var(--shadow);
+    transition:all .35s var(--ease);
+    position:relative; overflow:hidden;
   }
-  .back-btn svg{width:16px; height:16px}
-  .back-btn:hover{ transform:translateY(-1px); }
-  .back-btn:active{ transform:translateY(0); }
+  .back-btn::before{
+    content:""; position:absolute; top:0; left:-75%; width:50%; height:100%;
+    background:rgba(255,255,255,.25); transform:skewX(-20deg);
+    transition:left .6s ease;
+  }
+  .back-btn:hover::before{ left:125%; }
+  .back-btn:hover{
+    transform:translateY(-3px) scale(1.03);
+    box-shadow:0 10px 30px var(--glow);
+  }
+  .back-btn:active{ transform:scale(.98); box-shadow:0 4px 12px var(--shadow); }
+  .back-btn svg{ width:16px; height:16px; fill:currentColor; }
 
-  /* Theme toggle */
+  /* Theme toggle (kept minimal) */
   .theme-btn{
     background:var(--panel); color:var(--text); border:1px solid var(--border);
     padding:8px 12px; border-radius:999px; cursor:pointer; user-select:none;
@@ -92,20 +104,15 @@
   /* ================== ITEMS / BARS ================== */
   .item{
     border-radius:16px; margin:12px 8px; border:1px solid var(--border); box-shadow:var(--shadow);
-    transition:transform .18s ease, box-shadow .18s ease;
-    will-change:transform;
+    transition:transform .18s ease, box-shadow .18s ease; will-change:transform;
   }
   .item:hover{ transform:translateY(-4px); box-shadow:0 14px 28px rgba(0,0,0,.18); }
-  .item:has(> input:checked),
-  .item:focus-within{ transform:translateY(-2px); box-shadow:0 12px 24px rgba(0,0,0,.16); }
+  .item:has(> input:checked), .item:focus-within{ transform:translateY(-2px); box-shadow:0 12px 24px rgba(0,0,0,.16); }
   @media (prefers-reduced-motion:reduce){
     .item, .item:hover, .item:has(> input:checked){ transition:none; transform:none; }
   }
   html[data-theme="dark"] .item{ background:linear-gradient(180deg, #151a25 0%, #121722 100%); }
-  html[data-theme="light"] .item{
-    background:linear-gradient(180deg, #ffffff 0%, #f6f8fb 100%);
-    box-shadow:0 2px 10px rgba(0,0,0,0.06);
-  }
+  html[data-theme="light"] .item{ background:linear-gradient(180deg, #ffffff 0%, #f6f8fb 100%); box-shadow:0 2px 10px rgba(0,0,0,0.06); }
 
   /* HEADER (SUMMARY) */
   .summary{
@@ -113,21 +120,15 @@
     padding:16px 18px; font-weight:600; cursor:pointer; user-select:none;
     border-top-left-radius:16px; border-top-right-radius:16px; position:relative;
   }
-  html[data-theme="light"] .summary{
-    background:#ffffff; border-bottom:1px solid rgba(0,0,0,.06);
-  }
+  html[data-theme="light"] .summary{ background:#ffffff; border-bottom:1px solid rgba(0,0,0,.06); }
   html[data-theme="light"] .summary::after{
     content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
-    background:linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.52) 70%, rgba(255,255,255,0.9) 100%);
-    opacity:.45;
+    background:linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.52) 70%, rgba(255,255,255,0.9) 100%); opacity:.45;
   }
-  html[data-theme="dark"] .summary{
-    background:linear-gradient(180deg, #1b2130 0%, #151b28 100%); border-bottom:1px solid var(--border);
-  }
+  html[data-theme="dark"] .summary{ background:linear-gradient(180deg, #1b2130 0%, #151b28 100%); border-bottom:1px solid var(--border); }
   html[data-theme="dark"] .summary::after{
     content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
-    background:linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.22) 68%, rgba(255,255,255,0.38) 100%);
-    opacity:.35;
+    background:linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.22) 68%, rgba(255,255,255,0.38) 100%); opacity:.35;
   }
   .summary > *{ position:relative; z-index:1; }
   .summary:focus-visible{outline:none; box-shadow:0 0 0 3px var(--ring); border-radius:10px}
@@ -191,7 +192,7 @@
   <!-- TOP BAR -->
   <div class="topbar" role="navigation" aria-label="Page controls">
     <button class="back-btn" id="goBack" type="button" aria-label="Go back">
-      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M15.5 19a1 1 0 0 1-.7-.29l-6-6a1 1 0 0 1 0-1.42l6-6A1 1 0 0 1 16.5 6l-5.3 5.29L16.5 16a1 1 0 0 1-1 1z"/>
       </svg>
       <span>Back</span>
