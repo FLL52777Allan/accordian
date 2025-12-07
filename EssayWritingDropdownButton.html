@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Button → Dropdown (fade theme)</title>
+<style>
+  :root{
+    --dur:560ms; --ease:cubic-bezier(.22,1.2,.32,1);
+    --solid-light:#f4f5f8; --solid-dark:#0b0b10;
+  }
+
+  html[data-theme="dark"]{
+    --bg:#0b0b10; --bg-accent:#141826; --text:#e8e8f0; --muted:#a5a7b4;
+    --accent1:#6aa6ff; --accent2:#8ec1ff; --glow:rgba(106,166,255,.6);
+    --shadow:0 6px 24px rgba(0,0,0,.3);
+    --bg-solid:var(--solid-dark);
+
+    --sun-left:70%; --moon-left:30%; --sun-scale:.9; --moon-scale:1; --sun-opacity:.7; --moon-opacity:1;
+  }
+  html[data-theme="light"]{
+    --bg:#f4f5f8; --bg-accent:#ffffff; --text:#0e1320; --muted:#5a5c63;
+    --accent1:#6aa6ff; --accent2:#8ec1ff; --glow:rgba(47,107,255,.45);
+    --shadow:0 2px 14px rgba(0,0,0,.08);
+    --bg-solid:var(--solid-light);
+
+    --sun-left:30%; --moon-left:70%; --sun-scale:1; --moon-scale:.9; --sun-opacity:1; --moon-opacity:.7;
+  }
+
+  html,body{height:100%;margin:0;background-color:var(--bg-solid);}
+  body{
+    font-family:system-ui,-apple-system,Segoe UI,Inter,Roboto,Helvetica,Arial,"Noto Sans";
+    color:var(--text);
+    transition:background-color .25s ease,color .25s ease;
+    background: radial-gradient(1000px 520px at 20% -10%, var(--bg-accent) 0%, var(--bg) 60%);
+    min-height:100dvh;
+    display:grid; place-items:center;
+  }
+
+  .sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+  .top-right{
+    position:fixed; top:16px; right:16px; z-index:10;
+  }
+
+  .theme-btn{
+    background:linear-gradient(90deg, var(--accent1), var(--accent2));
+    color:#fff; border:none; border-radius:40px; cursor:pointer; user-select:none;
+    padding:8px 14px; box-shadow:0 6px 20px var(--shadow);
+    transition:all .35s var(--ease); position:relative; overflow:hidden;
+    display:inline-flex; align-items:center; gap:10px; font-weight:600; letter-spacing:.3px;
+  }
+  .theme-btn::before{
+    content:""; position:absolute; top:0; left:-75%; width:50%; height:100%;
+    background:rgba(255,255,255,.25); transform:skewX(-20deg); transition:left .6s ease;
+  }
+  .theme-btn:hover::before{ left:125%; }
+  .theme-btn:hover{ transform:translateY(-2px) scale(1.02); box-shadow:0 10px 26px var(--glow); }
+  .theme-btn:active{ transform:scale(.98); box-shadow:0 4px 12px var(--shadow); }
+
+  .icon-track{
+    position:relative; width:68px; height:28px; border-radius:999px;
+    background:rgba(255,255,255,.18);
+    border:1px solid rgba(255,255,255,.25);
+    display:inline-block;
+  }
+  .ico{
+    position:absolute; top:50%;
+    transform:translate(-50%,-50%) scale(1);
+    transition:left var(--dur) var(--ease), transform var(--dur) var(--ease), opacity .35s ease;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,.25));
+  }
+  .ico svg{ width:18px; height:18px; display:block; }
+  .ico.sun  { left: var(--sun-left);  opacity: var(--sun-opacity);  transform: translate(-50%,-50%) scale(var(--sun-scale)); }
+  .ico.moon { left: var(--moon-left); opacity: var(--moon-opacity); transform: translate(-50%,-50%) scale(var(--moon-scale)); }
+  .theme-btn.swap .ico.sun  { transform: translate(-50%,-50%) scale(var(--sun-scale))  rotate(18deg); }
+  .theme-btn.swap .ico.moon { transform: translate(-50%,-50%) scale(var(--moon-scale)) rotate(-18deg); }
+
+  @keyframes trail-pop {
+    0%   { opacity:.6; transform:translate(-50%,-50%) scaleX(1.8) scaleY(.9); }
+    60%  { opacity:.25; transform:translate(-50%,-50%) scaleX(1.1) scaleY(1.05); }
+    100% { opacity:0;  transform:translate(-50%,-50%) scaleX(1)    scaleY(1); }
+  }
+  .ico::after{
+    content:""; position:absolute; left:50%; top:50%;
+    width:26px; height:26px; border-radius:999px; pointer-events:none; opacity:0; filter: blur(8px);
+    transform:translate(-50%,-50%);
+  }
+  .theme-btn.swap .ico.sun::after{
+    background: radial-gradient(closest-side, rgba(255,215,90,.9), rgba(255,190,70,.0));
+    animation: trail-pop 380ms var(--ease) both;
+  }
+  .theme-btn.swap .ico.moon::after{
+    background: radial-gradient(closest-side, rgba(140,175,255,.9), rgba(140,175,255,.0));
+    animation: trail-pop 380ms var(--ease) both;
+  }
+
+  .center{
+    display:grid; justify-items:center; gap:20px; text-align:center; padding:16px;
+  }
+
+  /* bigger main button */
+  .fancy-button{
+    background:linear-gradient(90deg, var(--accent1), var(--accent2));
+    color:white; border:none; border-radius:50px;
+    padding:22px 60px;          /* <— bigger */
+    font-size:22px; font-weight:600; letter-spacing:.5px; cursor:pointer;
+    box-shadow:0 8px 26px var(--shadow);
+    transition:all .35s var(--ease);
+    position:relative; overflow:hidden;
+  }
+  .fancy-button::before{
+    content:""; position:absolute; top:0; left:-75%; width:50%; height:100%;
+    background:rgba(255,255,255,.25); transform:skewX(-20deg); transition:left .6s ease;
+  }
+  .fancy-button:hover::before{ left:125%; }
+  .fancy-button:hover{ transform:translateY(-5px) scale(1.05); box-shadow:0 14px 36px var(--glow); }
+  .fancy-button:active{ transform:scale(.98); box-shadow:0 4px 12px var(--shadow); }
+
+  .footer-text{ font-size:14px; color:var(--muted); opacity:.8; }
+
+  /* Fade overlay */
+  .theme-fade{
+    position:fixed; inset:0; z-index:9999; pointer-events:none;
+    background:var(--fade-bg, var(--bg-solid)); opacity:0;
+    transition: opacity var(--fade-dur, 480ms) ease; will-change:opacity;
+  }
+  .theme-fade.in { opacity:1; }
+  .theme-fade.out{ opacity:0; }
+</style>
+</head>
+<body>
+  <div class="top-right">
+    <button class="theme-btn" id="toggleTheme" type="button" aria-label="Toggle theme">
+      <span class="sr">Toggle theme</span>
+      <span class="icon-track" aria-hidden="true">
+        <span class="ico sun">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.76 4.84 5.34 3.42 3.92 4.84l1.42 1.42 1.42-1.42zm10.48 0 1.42-1.42 1.42 1.42-1.42 1.42-1.42-1.42zM12 4V1h0v3zm0 19v-3h0v3zM4 12H1v0h3zm19 0h-3v0h3zM6.76 19.16l-1.42 1.42L3.92 19.16l1.42-1.42 1.42 1.42zm10.48 0 1.42 1.42 1.42-1.42-1.42-1.42-1.42 1.42zM12 7a5 5 0 1 0 .001 10.001A5 5 0 0 0 12 7z"/></svg>
+        </span>
+        <span class="ico moon">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </span>
+      </span>
+    </button>
+  </div>
+
+  <main class="center">
+    <button class="fancy-button"
+      onclick="window.location.href='https://fll52777allan.github.io/accordian/EssayWritingDropDownMenu.html';">
+      Open Dropdown Menu
+    </button>
+    <p class="footer-text">Click to view the dropdown menu holding the examples.</p>
+  </main>
+
+  <div class="theme-fade" id="themeFade"></div>
+
+  <script>
+    (function(){
+      const KEY='accordion-theme';
+      const html=document.documentElement;
+      const themeBtn=document.getElementById('toggleTheme');
+      const fadeEl=document.getElementById('themeFade');
+
+      try{
+        const saved=localStorage.getItem(KEY);
+        if(saved==='light'||saved==='dark') html.setAttribute('data-theme', saved);
+      }catch(e){}
+
+      function swapPulse(){
+        themeBtn.classList.add('swap');
+        setTimeout(()=> themeBtn.classList.remove('swap'), 300);
+      }
+
+      function setFadeBgToNextTheme(){
+        const next=html.getAttribute('data-theme')==='dark'?'light':'dark';
+        const solid=next==='dark'
+          ? getComputedStyle(html).getPropertyValue('--solid-dark')
+          : getComputedStyle(html).getPropertyValue('--solid-light');
+        fadeEl.style.setProperty('--fade-bg', (solid||'').trim()||(next==='dark'?'#0b0b10':'#f4f5f8'));
+      }
+
+      function toggleThemeNow(){
+        const next=html.getAttribute('data-theme')==='dark'?'light':'dark';
+        html.setAttribute('data-theme', next);
+        try{localStorage.setItem(KEY,next);}catch(e){}
+        swapPulse();
+      }
+
+      themeBtn?.addEventListener('click', ()=>{
+        setFadeBgToNextTheme();
+        fadeEl.classList.add('in'); fadeEl.classList.remove('out');
+        setTimeout(()=>{
+          toggleThemeNow();
+          setTimeout(()=>{ fadeEl.classList.add('out'); fadeEl.classList.remove('in'); }, 100);
+        },20);
+      });
+    })();
+  </script>
+</body>
+</html>
